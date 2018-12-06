@@ -1,20 +1,51 @@
 {
   "name": "workhours-calc",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "licence": "MIT",
+  "homepage": "./",
+  "main": "public/electron.js",
   "dependencies": {
+    "electron-is-dev": "^1.0.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-scripts": "2.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "nf start -p 3000",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "electron-start": "node src/start-react",
+    "react-start": "react-scripts start",
+    "pack": "build --dir",
+    "dist": "npm run build && build",
+    "postinstall": "install-app-deps"
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "devDependencies": {
+    "electron": "^3.0.10",
+    "electron-builder": "^20.38.2"
+  },
+  "build": {
+    "appId": "com.electron.workhours-calc",
+    "compression": "normal",
+    "win": {
+      "target": "portable",
+      "icon": "https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-256.png",
+      "publish": {
+				"provider": "s3",
+				"bucket": "workhours",
+				"path": "releases"
+			}
+    },
+    "directories": {
+			"buildResources": "build",
+			"output": "dist"
+		}
   },
   "browserslist": [
     ">0.2%",
