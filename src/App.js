@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import PageContainer from './PageContainer'
 import ReportContainer from './modules/report/ReportContainer'
-import PartContainer from './modules/part/PartContainer'
+import PartAdd from './modules/part/PartAdd'
 import ChoiceContainer from './modules/choice/ChoiseContainer'
 import ArchiveContainer from './modules/archive/ArchiveContainer'
 import { createStore } from 'redux'
@@ -20,7 +20,7 @@ class App extends Component {
               <Route exact path='/' component={ReportContainer}/>
               <Route path='/report' component={ReportContainer}/>
               <Route path='/choice' component={ChoiceContainer}/>
-              <Route path='/part' component={PartContainer}/>
+              <Route path='/part' component={PartAdd}/>
               <Route path='/archive' component={ArchiveContainer}/>
             </Switch>
           </PageContainer>
