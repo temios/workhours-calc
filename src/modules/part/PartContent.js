@@ -2,15 +2,15 @@ import * as React from 'react'
 import Header from '../../shared/components/Header'
 import PartFormContainer from './PartFormContainer'
 
-class PartAdd extends React.Component {
+class PartContent extends React.Component {
   render () {
     return (
       <div>
-        <Header header='Добавление'/>
+        <Header header='Новая деталь'/>
         <PartFormContainer/>
       </div>
     )
   }
 }
 
-export default PartAdd;
+export default PartContent;

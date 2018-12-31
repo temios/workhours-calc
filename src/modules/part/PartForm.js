@@ -19,6 +19,7 @@ class PartForm extends React.Component {
     this.validateField = this.validateField.bind(this)
     this.validateForm = this.validateForm.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.chooseCategory = this.chooseCategory.bind(this)
 
     this.state = {
       dropdownOpen: false,
@@ -83,6 +84,14 @@ class PartForm extends React.Component {
     }, this.validateForm)
   }
 
+  chooseCategory (event) {
+    let state = this.state
+    state.part.category = event.target.innerHTML
+    this.setState({
+      state: state,
+    }, () => { this.validateField('category', state.part.category) })
+  }
+
   validateForm () {
     let valid = true
     for (let value in this.state.inputValids) {
@@ -111,8 +120,9 @@ class PartForm extends React.Component {
         <DropdownToggle caret>
         </DropdownToggle>
         <DropdownMenu>
-          {this.props.categories.map(function (category) {
-            return <DropdownItem>{category.name}</DropdownItem>
+          {this.props.categories.map((category) => {
+            return <DropdownItem key={category.id}
+                                 onClick={this.chooseCategory}>{category.name}</DropdownItem>
           })}
         </DropdownMenu>
       </InputGroupButtonDropdown>
@@ -125,7 +135,7 @@ class PartForm extends React.Component {
             <InputGroup>
               <Input type='text' name='category'
                      id='category' //TODO вынести в компонент
-                     defaultValue={this.state.category}
+                     value={this.state.part.category}
                      invalid={!this.state.inputValids.category &&
                      this.state.inputTouched.category}
                      onChange={this.handleUserInput}/>
@@ -137,7 +147,7 @@ class PartForm extends React.Component {
           <Label for='partName' md={2}>Наименование</Label>
           <Col md={10}>
             <Input type='text' name='name' id='name'
-                   defaultValue={this.state.name}
+                   defaultValue={this.state.part.name}
                    invalid={!this.state.inputValids.name &&
                    this.state.inputTouched.name}
                    onChange={this.handleUserInput}/>
@@ -147,7 +157,7 @@ class PartForm extends React.Component {
           <Label for='hours' md={2}>Кол-во часов</Label>
           <Col md={10}>
             <Input type='text' name='hours' id='hours'
-                   defaultValue={this.state.hours}
+                   defaultValue={this.state.part.hours}
                    invalid={!this.state.inputValids.hours &&
                    this.state.inputTouched.hours}
                    onChange={this.handleUserInput}/>
@@ -158,7 +168,7 @@ class PartForm extends React.Component {
           <Col md={10}>
             <Input type='file' name='picture' id='picture'
                    accept=".png,.jpeg,.jpg"
-                   defaultValue={this.state.picture}
+                   defaultValue={this.state.part.picture}
                    invalid={!this.state.inputValids.picture &&
                    this.state.inputTouched.picture}
                    onChange={this.handleUserInput}/>
@@ -166,7 +176,7 @@ class PartForm extends React.Component {
         </FormGroup>
         <Row>
           <Col md={10}>
-            <img src={this.state.previewURL} id={'part-picture'} alt=''/>
+            <img src={this.state.part.previewURL} id={'part-picture'} alt=''/>
           </Col>
         </Row>
         <Button color='success'

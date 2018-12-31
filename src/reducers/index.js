@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
 import reportReducer from './reportReducer'
-import partReducer from './partReducer'
+import catalogReducer from './catalogReducer'
 
 export default combineReducers({
   reportReducer,
-  partReducer
+  catalogReducer
 });

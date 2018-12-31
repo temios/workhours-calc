@@ -1,15 +1,20 @@
 import { connect } from 'react-redux'
 import PartForm from './PartForm'
-import { addPart } from '../../actions'
+import { addPartToDB } from '../../actions'
 
 const mapDispatchToProps = (dispatch) => ({
   addPart: (properties) => {
-    dispatch(addPart(properties))
+    dispatch(addPartToDB(properties))
   }
 })
 
+function mapStateToProps(state) {
+  return {
+    categories: state.catalogReducer.categories
+  }
+}
+
 export default connect(
-  null,
-  //mapStateToProps,
+  mapStateToProps,
   mapDispatchToProps
 )(PartForm)
