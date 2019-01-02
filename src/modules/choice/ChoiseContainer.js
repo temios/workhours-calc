@@ -1,24 +1,28 @@
-import * as React from 'react'
+import { connect } from 'react-redux'
+import { addPartToReport, editPart, reloadParts } from '../../actions'
+import ChoiceGrid from './ChoiceGrid'
 
-class ChoiceContainer extends React.Component {
-  constructor (props, context) {
-    super(props)
-    let parts = []
-    fetch('/mock.json').then((response) => {
-      return response.json()
-    }).then((data) => {
-      parts = data
-      console.log(parts)
-    })
-  }
+const mapDispatchToProps = (dispatch) => ({
+  addPartToReport: (properties) => {
+    dispatch(addPartToReport(properties))
+  },
+  reloadParts: (properties) => {
+    dispatch(reloadParts(properties))
+  },
+  editPart: (properties) => {
+    dispatch(editPart(properties))
+  },
+})
 
-  render () {
-    return (
-      <div>
-        choise
-      </div>
-    )
+function mapStateToProps (state) {
+  console.log(state)
+  return {
+    categories: state.catalogReducer.categories,
+    parts: state.catalogReducer.currentParts,
   }
 }
 
-export default ChoiceContainer
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ChoiceGrid)

@@ -32,16 +32,16 @@ class MenuContainer extends React.Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar className='mr-auto'>
               <NavItem>
-                <NavLink tag={Link} to='/report'>Отчёт</NavLink>
+                <NavLink tag={Link} to='/report'>Текущий отчёт</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to='/choice'>Выбор</NavLink>
+                <NavLink tag={Link} to='/choice'>Выбор деталей</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to='/part'>Добавление</NavLink>
+                <NavLink tag={Link} to='/part'>Новая деталь</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to='/archive'>Архив</NavLink>
+                <NavLink tag={Link} to='/archive'>Архив отчётов</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
