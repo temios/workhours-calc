@@ -23,19 +23,13 @@ class PartForm extends React.Component {
 
     this.state = {
       dropdownOpen: false,
-      part: {
-        category: '',
-        name: '',
-        hours: '',
-        picture: '',
-        id: 0,
-      },
+      part: this.props.part,
       inputErrors: { category: '', name: '', hours: '', picture: '' },
       inputValids: {
-        category: false,
-        name: false,
-        hours: false,
-        picture: false,
+        category: this.props.isEdit,
+        name: this.props.isEdit,
+        hours: this.props.isEdit,
+        picture: this.props.isEdit,
       },
       inputTouched: {
         category: false,
@@ -43,9 +37,10 @@ class PartForm extends React.Component {
         hours: false,
         picture: false,
       },
-      formValid: false,
-      redirect: false,
-      previewURL: '',
+      formValid: this.props.isEdit,
+      redirect: Object.keys(this.props.part).length === 0,
+      previewURL: this.props.isEdit ? this.props.part.picture : '',
+      isEdit: this.props.isEdit,
     }
   }
 
@@ -168,7 +163,6 @@ class PartForm extends React.Component {
           <Col md={10}>
             <Input type='file' name='picture' id='picture'
                    accept=".png,.jpeg,.jpg"
-                   defaultValue={this.state.part.picture}
                    invalid={!this.state.inputValids.picture &&
                    this.state.inputTouched.picture}
                    onChange={this.handleUserInput}/>
@@ -176,11 +170,13 @@ class PartForm extends React.Component {
         </FormGroup>
         <Row>
           <Col md={10}>
-            <img src={this.state.part.previewURL} id={'part-picture'} alt=''/>
+            <img src={this.state.previewURL} id={'part-picture'} alt=''/>
           </Col>
         </Row>
         <Button color='success'
-                disabled={!this.state.formValid}>Добавить</Button>
+                disabled={!this.state.formValid}>{this.props.isEdit
+          ? 'Сохранить'
+          : 'Добавить'}</Button>
       </Form>
     )
   }

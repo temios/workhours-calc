@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { addPartToReport, reloadParts } from '../../actions'
+import { addPartToReport, editPart, reloadParts } from '../../actions'
 import ChoiceGrid from './ChoiceGrid'
 
 const mapDispatchToProps = (dispatch) => ({
@@ -8,11 +8,14 @@ const mapDispatchToProps = (dispatch) => ({
   },
   reloadParts: (properties) => {
     dispatch(reloadParts(properties))
-  }
+  },
+  editPart: (properties) => {
+    dispatch(editPart(properties))
+  },
 })
 
 function mapStateToProps (state) {
-  console.log(state);
+  console.log(state)
   return {
     categories: state.catalogReducer.categories,
     parts: state.catalogReducer.currentParts,
@@ -21,5 +24,5 @@ function mapStateToProps (state) {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ChoiceGrid)

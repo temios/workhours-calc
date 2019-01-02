@@ -9,12 +9,14 @@ import ArchiveContainer from './modules/archive/ArchiveContainer'
 import { createStore } from 'redux'
 import rootReducer from './reducers'
 import { initialStore } from './actions'
-const store = createStore(rootReducer);
+import PartEdit from './modules/part/PartEdit'
+
+const store = createStore(rootReducer)
 
 fetch('/mock.json').then((response) => {
   return response.json()
 }).then((data) => {
-  store.dispatch(initialStore(data));
+  store.dispatch(initialStore(data))
 })
 
 class App extends Component {
@@ -28,6 +30,7 @@ class App extends Component {
               <Route path='/report' component={ReportContainer}/>
               <Route path='/choice' component={ChoiceContent}/>
               <Route path='/part' component={PartContent}/>
+              <Route path='/edit' component={PartEdit}/>
               <Route path='/archive' component={ArchiveContainer}/>
             </Switch>
           </PageContainer>

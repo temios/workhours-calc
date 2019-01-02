@@ -10,6 +10,7 @@ import {
   Table,
 } from 'reactstrap'
 import './ChoiseGrid.css'
+import { Redirect } from 'react-router-dom'
 
 class ChoiceGrid extends React.Component {
   constructor (props) {
@@ -19,12 +20,14 @@ class ChoiceGrid extends React.Component {
       modal: false,
       partId: null,
       count: null,
+      toEdit: false,
     }
     this.reloadParts = this.reloadParts.bind(this)
     this.handleAdd = this.handleAdd.bind(this)
     this.toggle = this.toggle.bind(this)
     this.addPart = this.addPart.bind(this)
     this.changeCount = this.changeCount.bind(this)
+    this.editPart = this.editPart.bind(this)
   }
 
   reloadParts (event) {
@@ -49,12 +52,21 @@ class ChoiceGrid extends React.Component {
     this.toggle()
   }
 
+  editPart (event) {
+    let partId = parseInt(event.target.dataset.id)
+    let part = this.props.parts.filter((part) => {
+      return part.id === partId
+    })[0]
+    this.props.editPart(part)
+    this.setState({ toEdit: true })
+  }
+
   changeCount (event) {
     let count = parseInt(event.target.value)
     if (!isNaN(count)) {
       this.setState({
         count: count,
-        error: ''
+        error: '',
       })
     } else {
       this.setState({ error: 'Введите число.' })
@@ -87,13 +99,15 @@ class ChoiceGrid extends React.Component {
     if (this.props.parts.length > 0) {
       parts = this.props.parts.map((part) =>
         <tr key={part.id}>
-          <th scope='row'>1</th>
-          <td>Mark</td>
+          <th scope='row'>{part.id}</th>
+          <td>{part.hours}</td>
           <td>
-            <img src='/WorkHours.png' className='partImage' alt=''/>
+            <img src={part.picture} className='partImage' alt=''/>
           </td>
-          <td>@mdo</td>
-          <td><Button color='warning'>Редактировать</Button></td>
+          <td>{part.name}</td>
+          <td><Button color='warning'
+                      onClick={this.editPart}
+                      data-id={part.id}>Редактировать</Button></td>
           <td><Button color='success' data-id={part.id}
                       onClick={this.handleAdd}>Добавить</Button></td>
         </tr>,
@@ -102,6 +116,9 @@ class ChoiceGrid extends React.Component {
       parts = <tr>
         <td>Нет деталей в выбранной категории</td>
       </tr>
+    }
+    if (this.state.toEdit) {
+      return <Redirect to='/edit' push={true}/>
     }
     return (
       <React.Fragment>
