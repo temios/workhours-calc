@@ -98,7 +98,6 @@ class PartForm extends React.Component {
   handleSubmit (event) {
     event.preventDefault()
     this.props.addPart(this.state.part)
-    console.log(this.context)
     this.setState({ redirect: true })
   }
 
