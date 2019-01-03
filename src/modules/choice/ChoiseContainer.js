@@ -15,10 +15,10 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 function mapStateToProps (state) {
-  console.log(state)
   return {
     categories: state.catalogReducer.categories,
     parts: state.catalogReducer.currentParts,
+    reportItems: state.reportReducer.items
   }
 }
 

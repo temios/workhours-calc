@@ -18,11 +18,31 @@
   "categories": [
     {
       "id": 1,
-      "name" : "балка"
+      "name": "балка"
     },
     {
       "id": 2,
       "name": "блок"
+    }
+  ],
+  "reports": [
+    {
+      "items": [
+        {
+          "count": 2,
+          "partId": 1
+        }
+      ],
+      "name": "testReport"
+    },
+    {
+      "items": [
+        {
+          "count": 3,
+          "partId": 2
+        }
+      ],
+      "name": "testReport2"
     }
   ]
 }

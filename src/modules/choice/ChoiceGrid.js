@@ -21,10 +21,14 @@ class ChoiceGrid extends React.Component {
       partId: null,
       count: null,
       toEdit: false,
+      modalError: false,
+      modalErrorText: '',
     }
+    console.log(this.props.reportItems)
     this.reloadParts = this.reloadParts.bind(this)
     this.handleAdd = this.handleAdd.bind(this)
     this.toggle = this.toggle.bind(this)
+    this.toggleError = this.toggleError.bind(this)
     this.addPart = this.addPart.bind(this)
     this.changeCount = this.changeCount.bind(this)
     this.editPart = this.editPart.bind(this)
@@ -35,20 +39,31 @@ class ChoiceGrid extends React.Component {
   }
 
   handleAdd (event) {
+    let partId = event.target.dataset.id
     this.setState({
-      partId: parseInt(event.target.dataset.id),
+      partId: parseInt(partId),
     })
     this.toggle()
   }
 
   addPart () {
-    let part = this.props.parts.filter((part) => {
-      return part.id === this.state.partId
-    })[0]
-    this.props.addPartToReport({
-      count: this.state.count,
-      part: part,
+    let alreadyAdded = this.props.reportItems.some((item) => {
+      return item.part.id === this.state.partId
     })
+    if (alreadyAdded) {
+      this.setState({
+        modalErrorText: 'Эта деталь уже добавлена в отчёт',
+      })
+      this.toggleError()
+    } else {
+      let part = this.props.parts.filter((part) => {
+        return part.id === this.state.partId
+      })[0]
+      this.props.addPartToReport({
+        count: this.state.count,
+        part: part,
+      })
+    }
     this.toggle()
   }
 
@@ -76,6 +91,12 @@ class ChoiceGrid extends React.Component {
   toggle () {
     this.setState({
       modal: !this.state.modal,
+    })
+  }
+
+  toggleError () {
+    this.setState({
+      modalError: !this.state.modalError,
     })
   }
 
@@ -140,7 +161,7 @@ class ChoiceGrid extends React.Component {
         </Table>
         <Modal isOpen={this.state.modal} toggle={this.toggle}
                className={this.props.className}>
-          <ModalHeader toggle={this.toggle}>Количество</ModalHeader>
+          <ModalHeader>Количество</ModalHeader>
           <ModalBody>
             <Input type='text' onChange={this.changeCount}
                    invalid={this.state.error !== ''}/>
@@ -150,6 +171,15 @@ class ChoiceGrid extends React.Component {
             <Button color='secondary' onClick={this.toggle}>Отмена</Button>
             <Button color='success' onClick={this.addPart}
                     disabled={this.state.error !== ''}>Добавить</Button>
+          </ModalFooter>
+        </Modal>
+        <Modal isOpen={this.state.modalError} toggle={this.toggleError}>
+          <ModalHeader>Ошибка</ModalHeader>
+          <ModalBody>
+            {this.state.modalErrorText}
+          </ModalBody>
+          <ModalFooter>
+            <Button color='success' onClick={this.toggleError}>Ок</Button>
           </ModalFooter>
         </Modal>
       </React.Fragment>

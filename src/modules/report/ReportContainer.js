@@ -1,13 +1,43 @@
-import * as React from 'react'
+import { connect } from 'react-redux'
+import {
+  clearReport,
+  removePartFromReport,
+  addReportToArchive,
+  incrementPartCount,
+  dicrementPartCount,
+  changeReportName,
+} from '../../actions'
+import ReportForm from './ReportForm'
 
-class ReportContainer extends React.Component {
-  render () {
-    return (
-      <div>
-report
-      </div>
-    )
+const mapDispatchToProps = (dispatch) => ({
+  clearReport: (props) => {
+    dispatch(clearReport(props))
+  },
+  removePart: (props) => {
+    dispatch(removePartFromReport(props))
+  },
+  addReportToArchive: (props) => {
+    dispatch(addReportToArchive(props))
+  },
+  incrementPartCount: (props) => {
+    dispatch(incrementPartCount(props))
+  },
+  dicrementPartCount: (props) => {
+    dispatch(dicrementPartCount(props))
+  },
+  changeReportName: (props) => {
+    dispatch(changeReportName(props))
+  },
+})
+
+function mapStateToProps (state) {
+  return {
+    items: state.reportReducer.items,
+    reportName: state.reportReducer.reportName,
   }
 }
 
-export default ReportContainer;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ReportForm)
