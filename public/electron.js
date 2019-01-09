@@ -1,8 +1,22 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 
-const path = require('path');
-const isDev = require('electron-is-dev');
+const path = require('path')
+const isDev = require('electron-is-dev')
+const sequelize = require('sequelize')
+
+const db = new sequelize('database', 'username', 'password', {
+  host: 'localhost',
+  dialect: 'sqlite',
+  operatorsAliases: false,
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+  storage: './work_hours.db'
+})
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -16,9 +30,9 @@ function createWindow () {
   
   mainWindow.loadURL(
 		isDev
-			? process.env.ELECTRON_START_URL
+			? `http://localhost:3000`
 			: `file://${path.join(__dirname, '../build/index.html')}`,
-	);
+	)
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
@@ -29,6 +43,15 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
+  })
+
+  db
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.')
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err)
   })
 }
 

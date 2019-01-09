@@ -14,15 +14,16 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1",
     "reactstrap": "^6.5.0",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "sequelize": "^4.42.0",
+    "sqlite3": "^4.0.4"
   },
   "scripts": {
-    "start": "nf start -p 3000",
+    "start": "concurrently \"npm run react-start\" \"wait-on http://localhost:3000/ && npm run electron\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "electron .",
-    "electron-start": "node src/start-react",
     "react-start": "react-scripts start",
     "pack": "build --dir",
     "dist": "npm run build && build",
@@ -32,8 +33,11 @@
     "extends": "react-app"
   },
   "devDependencies": {
+    "concurrently": "^4.1.0",
     "electron": "^3.0.10",
-    "electron-builder": "^20.38.2"
+    "electron-builder": "^20.38.2",
+    "sequelize-auto": "^0.4.29",
+    "wait-on": "^3.2.0"
   },
   "build": {
     "appId": "com.electron.workhours-calc",
