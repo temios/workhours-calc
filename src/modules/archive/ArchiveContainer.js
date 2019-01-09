@@ -1,13 +1,23 @@
-import * as React from 'react'
+import { connect } from 'react-redux'
+import ArchiveContent from './ArchiveContent'
+import { addReportToArchive, loadReportFromArchive } from '../../actions'
 
-class ArchiveContainer extends React.Component {
-  render () {
-    return (
-      <div>
-archive
-      </div>
-    )
+const mapDispatchToProps = (dispatch) => ({
+  addReportToArchive: (props) => {
+    dispatch(addReportToArchive(props))
+  },
+  loadReportFromArchive: (props) => {
+    dispatch(loadReportFromArchive(props))
+  },
+})
+
+function mapStateToProps (state) {
+  return {
+    reports: state.archiveReducer.reports
   }
 }
 
-export default ArchiveContainer;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ArchiveContent)

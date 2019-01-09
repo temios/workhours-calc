@@ -1,6 +1,10 @@
 import {
-  ADD_PART_TO_REPORT, CHANGE_REPORT_NAME,
-  CLEAR_REPORT, DICREMENT_PART_COUNT, INCREMENT_PART_COUNT,
+  ADD_PART_TO_REPORT,
+  CHANGE_REPORT_NAME,
+  CLEAR_REPORT,
+  DECREMENT_PART_COUNT,
+  INCREMENT_PART_COUNT,
+  LOAD_REPORT_FROM_ARCHIVE,
   REMOVE_PART_FROM_REPORT,
 } from '../actions'
 
@@ -33,7 +37,7 @@ const reportReducer = (state = initialState, action) => {
         return item
       })
       return { ...state, items: items }
-    case DICREMENT_PART_COUNT:
+    case DECREMENT_PART_COUNT:
       targetId = action.partId
       items = state.items.map((item) => {
         if (item.part.id === targetId) {
@@ -44,6 +48,21 @@ const reportReducer = (state = initialState, action) => {
       return { ...state, items: items }
     case CHANGE_REPORT_NAME:
       return { ...state, reportName: action.reportName }
+    case LOAD_REPORT_FROM_ARCHIVE:
+      items = []
+      fetch('/mock.json').then((response) => { // TODO: remove from reducer
+        return response.json()
+      }).then((data) => {
+        data.parts.forEach((part) => {
+          action.report.items.forEach((item) => {
+            if (item.partId === part.id) {
+              items.push({part: part, count: item.count})
+            }
+          })
+        })
+      })
+
+      return {...state, reportName: action.report.name, items: items}
     default:
       return state
   }
