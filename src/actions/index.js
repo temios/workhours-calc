@@ -8,8 +8,9 @@ export const EDIT_PART = 'EDIT'
 export const UPDATE_PART = 'UPDATE_PART'
 export const ADD_REPORT_TO_ARCHIVE = 'ADD_REPORT_TO_ARCHIVE'
 export const INCREMENT_PART_COUNT = 'INCREMENT_PART_COUNT'
-export const DICREMENT_PART_COUNT = 'DICREMENT_PART_COUNT'
+export const DECREMENT_PART_COUNT = 'DECREMENT_PART_COUNT'
 export const CHANGE_REPORT_NAME = 'CHANGE_REPORT_NAME'
+export const LOAD_REPORT_FROM_ARCHIVE = 'LOAD_REPORT_FROM_ARCHIVE'
 
 export const addPartToDB = part => ({
   type: ADD_PART_TO_DB,
@@ -60,12 +61,17 @@ export const incrementPartCount = partId => ({
   partId,
 })
 
-export const dicrementPartCount = partId => ({
-  type: DICREMENT_PART_COUNT,
+export const decrementPartCount = partId => ({
+  type: DECREMENT_PART_COUNT,
   partId,
 })
 
 export const changeReportName = reportName => ({
   type: CHANGE_REPORT_NAME,
   reportName,
+})
+
+export const loadReportFromArchive = report => ({
+  type: LOAD_REPORT_FROM_ARCHIVE,
+  report,
 })

@@ -4,7 +4,7 @@ import {
   removePartFromReport,
   addReportToArchive,
   incrementPartCount,
-  dicrementPartCount,
+  decrementPartCount,
   changeReportName,
 } from '../../actions'
 import ReportForm from './ReportForm'
@@ -22,8 +22,8 @@ const mapDispatchToProps = (dispatch) => ({
   incrementPartCount: (props) => {
     dispatch(incrementPartCount(props))
   },
-  dicrementPartCount: (props) => {
-    dispatch(dicrementPartCount(props))
+  decrementPartCount: (props) => {
+    dispatch(decrementPartCount(props))
   },
   changeReportName: (props) => {
     dispatch(changeReportName(props))

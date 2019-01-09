@@ -27,6 +27,7 @@
   ],
   "reports": [
     {
+      "id": 1,
       "items": [
         {
           "count": 2,
@@ -36,6 +37,7 @@
       "name": "testReport"
     },
     {
+      "id": 2,
       "items": [
         {
           "count": 3,

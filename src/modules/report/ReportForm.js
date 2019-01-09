@@ -16,7 +16,7 @@ class ReportForm extends React.Component {
     super(props)
     this.removePart = this.removePart.bind(this)
     this.clearReport = this.clearReport.bind(this)
-    this.dicrementCount = this.dicrementCount.bind(this)
+    this.decrementCount = this.decrementCount.bind(this)
     this.incrementCount = this.incrementCount.bind(this)
     this.changeName = this.changeName.bind(this)
     this.addToArchive = this.addToArchive.bind(this)
@@ -31,9 +31,9 @@ class ReportForm extends React.Component {
     this.props.clearReport()
   }
 
-  dicrementCount (e) {
+  decrementCount (e) {
     let partId = parseInt(e.target.dataset.id)
-    this.props.dicrementPartCount(partId)
+    this.props.decrementPartCount(partId)
   }
 
   incrementCount (e) {
@@ -50,6 +50,7 @@ class ReportForm extends React.Component {
       items: this.props.items,
       name: this.props.reportName,
     })
+    this.props.clearReport()
   }
 
   render () {
@@ -78,7 +79,7 @@ class ReportForm extends React.Component {
                 <td>{item.part.id}</td>
                 <td>
                   <button disabled={item.count < 2} data-id={item.part.id}
-                          onClick={this.dicrementCount}>-
+                          onClick={this.decrementCount}>-
                   </button>
                   {item.count}
                   <button onClick={this.incrementCount}
