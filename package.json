@@ -8,6 +8,7 @@
   "dependencies": {
     "bootstrap-css-only": "^4.1.3",
     "electron-is-dev": "^1.0.1",
+    "randomstring": "^1.1.5",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-redux": "^5.0.0",
@@ -27,16 +28,23 @@
     "react-start": "react-scripts start",
     "pack": "build --dir",
     "dist": "npm run build && build",
-    "postinstall": "install-app-deps"
+    "postinstall": "install-app-deps",
+    "standard": "standard --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
     "electron": "^3.0.10",
     "electron-builder": "^20.38.2",
     "sequelize-auto": "^0.4.29",
+    "standard": "^12.0.1",
     "wait-on": "^3.2.0"
   },
   "build": {

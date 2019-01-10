@@ -6,7 +6,7 @@ class ChoiceContent extends React.Component {
   render () {
     return (
       <div>
-        <Header header='Выбор деталей'/>
+        <Header header='Выбор деталей' />
         <ChoiceContainer />
       </div>
     )

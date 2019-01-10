@@ -6,11 +6,11 @@ class PartEdit extends React.Component {
   render () {
     return (
       <div>
-        <Header header='Редактирование'/>
-        <PartEditContainer/>
+        <Header header='Редактирование' />
+        <PartEditContainer />
       </div>
     )
   }
 }
 
-export default PartEdit;
+export default PartEdit

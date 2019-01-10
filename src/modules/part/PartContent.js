@@ -6,8 +6,8 @@ class PartContent extends React.Component {
   render () {
     return (
       <div>
-        <Header header='Новая деталь'/>
-        <PartAddContainer/>
+        <Header header='Новая деталь' />
+        <PartAddContainer />
       </div>
     )
   }

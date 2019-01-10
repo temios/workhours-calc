@@ -1,10 +1,10 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('part', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      autoIncrement: true,
       primaryKey: true
     },
     name: {
@@ -29,5 +29,5 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     tableName: 'part'
-  });
-};
+  })
+}

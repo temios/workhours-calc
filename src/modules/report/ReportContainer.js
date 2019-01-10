@@ -5,7 +5,7 @@ import {
   addReportToArchive,
   incrementPartCount,
   decrementPartCount,
-  changeReportName,
+  changeReportName
 } from '../../actions'
 import ReportForm from './ReportForm'
 
@@ -27,17 +27,17 @@ const mapDispatchToProps = (dispatch) => ({
   },
   changeReportName: (props) => {
     dispatch(changeReportName(props))
-  },
+  }
 })
 
 function mapStateToProps (state) {
   return {
     items: state.reportReducer.items,
-    reportName: state.reportReducer.reportName,
+    reportName: state.reportReducer.reportName
   }
 }
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(ReportForm)

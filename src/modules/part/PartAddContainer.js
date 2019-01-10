@@ -5,7 +5,7 @@ import { addPartToDB } from '../../actions'
 const mapDispatchToProps = (dispatch) => ({
   addPart: (properties) => {
     dispatch(addPartToDB(properties))
-  },
+  }
 })
 
 function mapStateToProps (state) {
@@ -16,13 +16,13 @@ function mapStateToProps (state) {
       name: '',
       hours: '',
       picture: '',
-      id: 0,
+      id: 0
     },
-    isEdit: false,
+    isEdit: false
   }
 }
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(PartForm)

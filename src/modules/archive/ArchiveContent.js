@@ -22,30 +22,30 @@ class ArchiveContent extends React.Component {
       reports =
         <Table>
           <thead>
-          <tr>
-            <th>#</th>
-            <th>Название</th>
-            <th>Дата</th>
-            <th>Редактирование</th>
-          </tr>
+            <tr>
+              <th>#</th>
+              <th>Название</th>
+              <th>Дата</th>
+              <th>Редактирование</th>
+            </tr>
           </thead>
           <tbody>
-          {this.props.reports.map((report) => {
-            return (
-              <tr key={report.id}>
-                <td>{report.id}</td>
-                <td>{report.name}</td>
-                <td>Date</td>
-                <td><Button color={'success'} data-id={report.id} onClick={this.loadReport}>Загрузить</Button></td>
-              </tr>
-            )
-          })}
+            {this.props.reports.map((report) => {
+              return (
+                <tr key={report.id}>
+                  <td>{report.id}</td>
+                  <td>{report.name}</td>
+                  <td>Date</td>
+                  <td><Button color={'success'} data-id={report.id} onClick={this.loadReport}>Загрузить</Button></td>
+                </tr>
+              )
+            })}
           </tbody>
         </Table>
     }
     return (
       <React.Fragment>
-        <Header header={'Архив отчётов'}/>
+        <Header header={'Архив отчётов'} />
         {reports}
       </React.Fragment>
     )

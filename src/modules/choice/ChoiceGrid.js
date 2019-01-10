@@ -7,7 +7,7 @@ import {
   Modal, ModalBody, ModalFooter,
   ModalHeader,
   Row,
-  Table,
+  Table
 } from 'reactstrap'
 import './ChoiseGrid.css'
 import { Redirect } from 'react-router-dom'
@@ -22,7 +22,7 @@ class ChoiceGrid extends React.Component {
       count: null,
       toEdit: false,
       modalError: false,
-      modalErrorText: '',
+      modalErrorText: ''
     }
     console.log(this.props.reportItems)
     this.reloadParts = this.reloadParts.bind(this)
@@ -41,7 +41,7 @@ class ChoiceGrid extends React.Component {
   handleAdd (event) {
     let partId = event.target.dataset.id
     this.setState({
-      partId: parseInt(partId),
+      partId: parseInt(partId)
     })
     this.toggle()
   }
@@ -52,7 +52,7 @@ class ChoiceGrid extends React.Component {
     })
     if (alreadyAdded) {
       this.setState({
-        modalErrorText: 'Эта деталь уже добавлена в отчёт',
+        modalErrorText: 'Эта деталь уже добавлена в отчёт'
       })
       this.toggleError()
     } else {
@@ -61,7 +61,7 @@ class ChoiceGrid extends React.Component {
       })[0]
       this.props.addPartToReport({
         count: this.state.count,
-        part: part,
+        part: part
       })
     }
     this.toggle()
@@ -81,7 +81,7 @@ class ChoiceGrid extends React.Component {
     if (!isNaN(count)) {
       this.setState({
         count: count,
-        error: '',
+        error: ''
       })
     } else {
       this.setState({ error: 'Введите число.' })
@@ -90,13 +90,13 @@ class ChoiceGrid extends React.Component {
 
   toggle () {
     this.setState({
-      modal: !this.state.modal,
+      modal: !this.state.modal
     })
   }
 
   toggleError () {
     this.setState({
-      modalError: !this.state.modalError,
+      modalError: !this.state.modalError
     })
   }
 
@@ -108,10 +108,10 @@ class ChoiceGrid extends React.Component {
         <Label for='category' sm={2}>Категория:</Label>
         <Col sm={10}>
           <Input type='select' name='category' id='category'
-                 onChange={this.reloadParts}>
+            onChange={this.reloadParts}>
             {this.props.categories.map((category) =>
               <option key={category.id}
-                      value={category.name}>{category.name}
+                value={category.name}>{category.name}
               </option>)}
           </Input>
         </Col>
@@ -123,15 +123,15 @@ class ChoiceGrid extends React.Component {
           <th scope='row'>{part.id}</th>
           <td>{part.hours}</td>
           <td>
-            <img src={part.picture} className='partImage' alt=''/>
+            <img src={part.picture} className='partImage' alt='' />
           </td>
           <td>{part.name}</td>
           <td><Button color='warning'
-                      onClick={this.editPart}
-                      data-id={part.id}>Редактировать</Button></td>
+            onClick={this.editPart}
+            data-id={part.id}>Редактировать</Button></td>
           <td><Button color='success' data-id={part.id}
-                      onClick={this.handleAdd}>Добавить</Button></td>
-        </tr>,
+            onClick={this.handleAdd}>Добавить</Button></td>
+        </tr>
       )
     } else {
       parts = <tr>
@@ -139,38 +139,38 @@ class ChoiceGrid extends React.Component {
       </tr>
     }
     if (this.state.toEdit) {
-      return <Redirect to='/edit' push={true}/>
+      return <Redirect to='/edit' push />
     }
     return (
       <React.Fragment>
         {categories}
         <Table>
           <thead>
-          <tr>
-            <th>#</th>
-            <th>Ч/Часы</th>
-            <th>Картинка</th>
-            <th>Название</th>
-            <th>Редактирование</th>
-            <th>Добавление</th>
-          </tr>
+            <tr>
+              <th>#</th>
+              <th>Ч/Часы</th>
+              <th>Картинка</th>
+              <th>Название</th>
+              <th>Редактирование</th>
+              <th>Добавление</th>
+            </tr>
           </thead>
           <tbody>
-          {parts}
+            {parts}
           </tbody>
         </Table>
         <Modal isOpen={this.state.modal} toggle={this.toggle}
-               className={this.props.className}>
+          className={this.props.className}>
           <ModalHeader>Количество</ModalHeader>
           <ModalBody>
             <Input type='text' onChange={this.changeCount}
-                   invalid={this.state.error !== ''}/>
+              invalid={this.state.error !== ''} />
             <FormFeedback>{this.state.error}</FormFeedback>
           </ModalBody>
           <ModalFooter>
             <Button color='secondary' onClick={this.toggle}>Отмена</Button>
             <Button color='success' onClick={this.addPart}
-                    disabled={this.state.error !== ''}>Добавить</Button>
+              disabled={this.state.error !== ''}>Добавить</Button>
           </ModalFooter>
         </Modal>
         <Modal isOpen={this.state.modalError} toggle={this.toggleError}>

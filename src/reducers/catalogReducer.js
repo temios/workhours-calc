@@ -2,7 +2,7 @@ import {
   ADD_PART_TO_DB,
   EDIT_PART,
   INITIAL_STORE,
-  RELOAD_PARTS, UPDATE_PART,
+  RELOAD_PARTS, UPDATE_PART
 } from '../actions'
 
 let id = 0
@@ -11,7 +11,7 @@ const initState = {
   categories: [],
   parts: [],
   currentParts: [],
-  editPart: {},
+  editPart: {}
 }
 
 const catalogReducer = (state = initState, action) => {
@@ -20,7 +20,7 @@ const catalogReducer = (state = initState, action) => {
       action.part.id = id++
       return {
         ...state,
-        parts: [...state.parts, action.part],
+        parts: [...state.parts, action.part]
       }
     case UPDATE_PART:
       let parts = state.parts.map((part) => {
@@ -29,7 +29,7 @@ const catalogReducer = (state = initState, action) => {
       console.log(parts)
       return {
         ...state,
-        parts: parts,
+        parts: parts
       }
     case INITIAL_STORE: {
       let currentCategory = action.store.categories[0].name
@@ -39,7 +39,7 @@ const catalogReducer = (state = initState, action) => {
         currentCategory: currentCategory,
         currentParts: action.store.parts.filter((part) => {
           return part.category === currentCategory
-        }),
+        })
       }
     }
     case RELOAD_PARTS: {
@@ -49,13 +49,13 @@ const catalogReducer = (state = initState, action) => {
         currentCategory: action.categoryName,
         currentParts: state.parts.filter((part) => {
           return part.category === action.categoryName
-        }),
+        })
       }
     }
     case EDIT_PART: {
       return {
         ...state,
-        editPart: action.editPart,
+        editPart: action.editPart
       }
     }
     default:

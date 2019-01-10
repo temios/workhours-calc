@@ -8,7 +8,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
   loadReportFromArchive: (props) => {
     dispatch(loadReportFromArchive(props))
-  },
+  }
 })
 
 function mapStateToProps (state) {
@@ -19,5 +19,5 @@ function mapStateToProps (state) {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(ArchiveContent)

@@ -10,9 +10,9 @@ const archiveReducer = (state = initState, action) => {
       let id = state.reports[state.reports.length - 1].id
       let report = action.report
       report.id = ++id
-      return {...state, reports: [...state.reports, report]}
+      return { ...state, reports: [...state.reports, report] }
     case INITIAL_STORE:
-      return {...state, reports: action.store.reports}
+      return { ...state, reports: action.store.reports }
     default:
       return state
   }

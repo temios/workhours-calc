@@ -13,7 +13,7 @@ import PartEdit from './modules/part/PartEdit'
 
 const store = createStore(rootReducer)
 
-fetch('/mock.json').then((response) => {
+window.fetch('/mock.json').then((response) => {
   return response.json()
 }).then((data) => {
   store.dispatch(initialStore(data))
@@ -26,12 +26,12 @@ class App extends Component {
         <Router>
           <PageContainer>
             <Switch>
-              <Route exact path='/' component={ReportContainer}/>
-              <Route path='/report' component={ReportContainer}/>
-              <Route path='/choice' component={ChoiceContent}/>
-              <Route path='/part' component={PartContent}/>
-              <Route path='/edit' component={PartEdit}/>
-              <Route path='/archive' component={ArchiveContainer}/>
+              <Route exact path='/' component={ReportContainer} />
+              <Route path='/report' component={ReportContainer} />
+              <Route path='/choice' component={ChoiceContent} />
+              <Route path='/part' component={PartContent} />
+              <Route path='/edit' component={PartEdit} />
+              <Route path='/archive' component={ArchiveContainer} />
             </Switch>
           </PageContainer>
         </Router>

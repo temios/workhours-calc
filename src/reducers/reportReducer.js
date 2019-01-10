@@ -5,12 +5,12 @@ import {
   DECREMENT_PART_COUNT,
   INCREMENT_PART_COUNT,
   LOAD_REPORT_FROM_ARCHIVE,
-  REMOVE_PART_FROM_REPORT,
+  REMOVE_PART_FROM_REPORT
 } from '../actions'
 
 let initialState = {
   items: [],
-  reportName: '',
+  reportName: ''
 }
 
 const reportReducer = (state = initialState, action) => {
@@ -50,19 +50,19 @@ const reportReducer = (state = initialState, action) => {
       return { ...state, reportName: action.reportName }
     case LOAD_REPORT_FROM_ARCHIVE:
       items = []
-      fetch('/mock.json').then((response) => { // TODO: remove from reducer
+      window.fetch('/mock.json').then((response) => { // TODO: remove from reducer
         return response.json()
       }).then((data) => {
         data.parts.forEach((part) => {
           action.report.items.forEach((item) => {
             if (item.partId === part.id) {
-              items.push({part: part, count: item.count})
+              items.push({ part: part, count: item.count })
             }
           })
         })
       })
 
-      return {...state, reportName: action.report.name, items: items}
+      return { ...state, reportName: action.report.name, items: items }
     default:
       return state
   }

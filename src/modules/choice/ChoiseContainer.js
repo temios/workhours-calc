@@ -11,7 +11,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
   editPart: (properties) => {
     dispatch(editPart(properties))
-  },
+  }
 })
 
 function mapStateToProps (state) {
@@ -24,5 +24,5 @@ function mapStateToProps (state) {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(ChoiceGrid)
