@@ -1,13 +1,12 @@
 import {
-  ADD_PART_TO_DB,
   EDIT_PART,
   RELOAD_PARTS,
   UPDATE_PART,
-  LOAD_CATEGORIES
+  LOAD_CATEGORIES, ADD_CATEGORY
 } from '../actions'
 
 const initState = {
-  currentCategory: null,
+  currentCategory: '',
   categories: [],
   parts: [],
   currentParts: [],
@@ -17,13 +16,9 @@ const initState = {
 const catalogReducer = (state = initState, action) => {
   switch (action.type) {
     case LOAD_CATEGORIES:
-      console.log(action.categories)
       return { ...state, categories: action.categories }
-    case ADD_PART_TO_DB:
-      return {
-        ...state,
-        parts: [...state.parts, action.part]
-      }
+    case ADD_CATEGORY:
+      return { ...state, categories: [...state.categories, action.category] }
     case UPDATE_PART:
       let parts = state.parts.map(part => {
         return part.id === action.part.id ? action.part : part
@@ -36,7 +31,7 @@ const catalogReducer = (state = initState, action) => {
     case RELOAD_PARTS: {
       return {
         ...state,
-        currentCategory: action.categoryName,
+        currentCategory: action.categoryId,
         currentParts: action.parts
       }
     }

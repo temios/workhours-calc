@@ -87,7 +87,7 @@ class ReportForm extends React.Component {
                     </button>
                   </td>
                   <td>{item.part.hour}</td>
-                  <td><img src={item.part.picture} alt={''}
+                  <td><img src={'images/' + item.part.picture} alt={''}
                     className={'part-picture'} /></td>
                   <td>{item.part.name}</td>
                   <td>{item.count * item.part.hour}</td>

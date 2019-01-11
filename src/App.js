@@ -8,30 +8,12 @@ import ChoiceContent from './modules/choice/ChoiseContent'
 import ArchiveContainer from './modules/archive/ArchiveContainer'
 import { createStore } from 'redux'
 import rootReducer from './reducers'
-import { loadCategories, reloadParts } from './actions'
 import PartEdit from './modules/part/PartEdit'
-import api from './services/ipc'
+import { onLoad } from './onLoad'
 
 const store = createStore(rootReducer)
 
-// window.fetch('/mock.json').then((response) => {
-//   return response.json()
-// }).then((data) => {
-//   store.dispatch(initialStore(data))
-// })
-
-api.getCategories().then((data) => {
-  store.dispatch(loadCategories(data))
-  return data
-}).then(categories => {
-  if (categories !== undefined && categories.length > 0) {
-    let currentCat = categories[0]
-    api.getParts(currentCat.id).then((parts) => {
-      console.log(parts)
-      store.dispatch(reloadParts(currentCat.name, parts))
-    })
-  }
-})
+onLoad(store)
 
 class App extends Component {
   render () {

@@ -1,12 +1,16 @@
 import { connect } from 'react-redux'
 import PartForm from './PartForm'
-import { addPartToDB } from '../../actions'
+import { reloadParts } from '../../actions'
 import api from '../../services/ipc'
 
 const mapDispatchToProps = (dispatch) => ({
   addPart: (properties) => {
     api.savePart(properties).then(
-      response => dispatch(addPartToDB(response)),
+      response => {
+        api.getParts(response.id_category).then(parts => {
+          dispatch(reloadParts(response.id_category, parts))
+        })
+      },
       err => console.log(err.message)
     )
   }

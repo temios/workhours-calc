@@ -40,15 +40,16 @@ const fs = require('fs')
         return db.category.findOne({ where: { name: part.category } })
       })
       .then(category => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           if (!category) {
             db.category.create({ name: part.name }).then(data => {
               let category = data.get({ plain: true })
-              event.sender.send('category-add', category)
+              event.sender.send('add-category-reply', category)
               resolve(data)
             })
+          } else {
+            resolve(category)
           }
-          resolve(category)
         })
       })
       .then(category => {
@@ -63,9 +64,7 @@ const fs = require('fs')
         return db.part.create(dbPart)
       })
       .then(newPart => {
-        let res = newPart.get({ plain: true })
-        res.category = part.category
-        event.sender.send('save-part-reply', res)
+        event.sender.send('save-part-reply', newPart.get({ plain: true }))
       })
       .catch(err => {
         event.sender.send('error', err.message)
