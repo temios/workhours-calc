@@ -1,8 +1,9 @@
 import {
   ADD_PART_TO_DB,
   EDIT_PART,
-  INITIAL_STORE,
-  RELOAD_PARTS, UPDATE_PART
+  RELOAD_PARTS,
+  UPDATE_PART,
+  LOAD_CATEGORIES
 } from '../actions'
 
 const initState = {
@@ -15,13 +16,16 @@ const initState = {
 
 const catalogReducer = (state = initState, action) => {
   switch (action.type) {
+    case LOAD_CATEGORIES:
+      console.log(action.categories)
+      return { ...state, categories: action.categories }
     case ADD_PART_TO_DB:
       return {
         ...state,
         parts: [...state.parts, action.part]
       }
     case UPDATE_PART:
-      let parts = state.parts.map((part) => {
+      let parts = state.parts.map(part => {
         return part.id === action.part.id ? action.part : part
       })
       console.log(parts)
@@ -29,25 +33,11 @@ const catalogReducer = (state = initState, action) => {
         ...state,
         parts: parts
       }
-    case INITIAL_STORE: {
-      let currentCategory = action.store.categories[0].name
-      return {
-        ...state,
-        ...action.store,
-        currentCategory: currentCategory,
-        currentParts: action.store.parts.filter((part) => {
-          return part.category === currentCategory
-        })
-      }
-    }
     case RELOAD_PARTS: {
-      console.log(action)
       return {
         ...state,
         currentCategory: action.categoryName,
-        currentParts: state.parts.filter((part) => {
-          return part.category === action.categoryName
-        })
+        currentParts: action.parts
       }
     }
     case EDIT_PART: {

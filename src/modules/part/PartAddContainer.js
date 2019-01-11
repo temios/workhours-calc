@@ -6,11 +6,8 @@ import api from '../../services/ipc'
 const mapDispatchToProps = (dispatch) => ({
   addPart: (properties) => {
     api.savePart(properties).then(
-      response => {
-        console.log(response)
-        dispatch(addPartToDB(response))
-      }
-      //err => dispatch(error(err))
+      response => dispatch(addPartToDB(response)),
+      err => console.log(err.message)
     )
   }
 })
@@ -21,7 +18,7 @@ function mapStateToProps (state) {
     part: {
       category: '',
       name: '',
-      hours: '',
+      hour: '',
       picture: '',
       id: 0
     },

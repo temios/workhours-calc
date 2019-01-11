@@ -1,5 +1,7 @@
 import api from '../services/ipc'
 
+export const LOAD_CATEGORIES = 'LOAD_CATEGORIES'
+export const ADD_CATEGORY = 'ADD_CATEGORY'
 export const ADD_PART_TO_DB = 'ADD_PART_TO_DB'
 export const ADD_PART_TO_REPORT = 'ADD_PART_TO_REPORT'
 export const REMOVE_PART_FROM_REPORT = 'REMOVE_PART_FROM_REPORT'
@@ -13,6 +15,16 @@ export const INCREMENT_PART_COUNT = 'INCREMENT_PART_COUNT'
 export const DECREMENT_PART_COUNT = 'DECREMENT_PART_COUNT'
 export const CHANGE_REPORT_NAME = 'CHANGE_REPORT_NAME'
 export const LOAD_REPORT_FROM_ARCHIVE = 'LOAD_REPORT_FROM_ARCHIVE'
+
+export const loadCategories = categories => ({
+  type: LOAD_CATEGORIES,
+  categories
+})
+
+export const addCategory = category => ({
+  type: ADD_CATEGORY,
+  category
+})
 
 export const addPartToDB = part => ({
   type: ADD_PART_TO_DB,
@@ -29,9 +41,10 @@ export const addPartToReport = item => ({
   item
 })
 
-export const reloadParts = categoryName => ({
+export const reloadParts = (categoryName, parts) => ({
   type: RELOAD_PARTS,
-  categoryName
+  categoryName,
+  parts
 })
 
 export const initialStore = function (store) {

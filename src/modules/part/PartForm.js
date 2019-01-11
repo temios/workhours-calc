@@ -24,17 +24,17 @@ class PartForm extends React.Component {
     this.state = {
       dropdownOpen: false,
       part: this.props.part,
-      inputErrors: { category: '', name: '', hours: '', picture: '' },
+      inputErrors: { category: '', name: '', hour: '', picture: '' },
       inputValids: {
         category: this.props.isEdit,
         name: this.props.isEdit,
-        hours: this.props.isEdit,
+        hour: this.props.isEdit,
         picture: this.props.isEdit
       },
       inputTouched: {
         category: false,
         name: false,
-        hours: false,
+        hour: false,
         picture: false
       },
       formValid: this.props.isEdit,
@@ -148,12 +148,12 @@ class PartForm extends React.Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Label for='hours' md={2}>Кол-во часов</Label>
+          <Label for='hour' md={2}>Кол-во часов</Label>
           <Col md={10}>
-            <Input type='text' name='hours' id='hours'
-              defaultValue={this.state.part.hours}
-              invalid={!this.state.inputValids.hours &&
-                   this.state.inputTouched.hours}
+            <Input type='text' name='hour' id='hour'
+              defaultValue={this.state.part.hour}
+              invalid={!this.state.inputValids.hour &&
+                   this.state.inputTouched.hour}
               onChange={this.handleUserInput} />
           </Col>
         </FormGroup>

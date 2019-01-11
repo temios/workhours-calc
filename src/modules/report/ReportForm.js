@@ -86,11 +86,11 @@ class ReportForm extends React.Component {
                       data-id={item.part.id}>+
                     </button>
                   </td>
-                  <td>{item.part.hours}</td>
+                  <td>{item.part.hour}</td>
                   <td><img src={item.part.picture} alt={''}
                     className={'part-picture'} /></td>
                   <td>{item.part.name}</td>
-                  <td>{item.count * item.part.hours}</td>
+                  <td>{item.count * item.part.hour}</td>
                   <td><Button color={'danger'} data-id={item.part.id}
                     onClick={this.removePart}>Удалить</Button></td>
                 </tr>

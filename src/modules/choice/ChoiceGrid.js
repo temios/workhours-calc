@@ -121,9 +121,9 @@ class ChoiceGrid extends React.Component {
       parts = this.props.parts.map((part) =>
         <tr key={part.id}>
           <th scope='row'>{part.id}</th>
-          <td>{part.hours}</td>
+          <td>{part.hour}</td>
           <td>
-            <img src={part.picture} className='partImage' alt='' />
+            <img src={'images/' + part.picture} className='partImage' alt='' />
           </td>
           <td>{part.name}</td>
           <td><Button color='warning'

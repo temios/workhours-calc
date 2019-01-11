@@ -12,9 +12,21 @@ api.getCategories = () => {
 }
 
 api.savePart = (part) => {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     ipcRenderer.send('save-part', part)
     ipcRenderer.on('save-part-reply', (event, result) => {
+      resolve(result)
+    })
+    ipcRenderer.on('error', (event, result) => {
+      reject(new Error(result))
+    })
+  })
+}
+
+api.getParts = (idCategory) => {
+  return new Promise(resolve => {
+    ipcRenderer.send('get-parts', idCategory)
+    ipcRenderer.on('get-parts-reply', (event, result) => {
       resolve(result)
     })
   })
