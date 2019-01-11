@@ -5,7 +5,6 @@ import {
   RELOAD_PARTS, UPDATE_PART
 } from '../actions'
 
-let id = 0
 const initState = {
   currentCategory: null,
   categories: [],
@@ -17,7 +16,6 @@ const initState = {
 const catalogReducer = (state = initState, action) => {
   switch (action.type) {
     case ADD_PART_TO_DB:
-      action.part.id = id++
       return {
         ...state,
         parts: [...state.parts, action.part]

@@ -18,19 +18,15 @@ const fs = require('fs')
   })
 
   ipcMain.on('save-part', (event, part) => {
-    let dbPart = db.part.create({
+    let dbPart = {
       name: part.name,
       hour: part.hours
-    })
+    }
     if (part.id !== 0) {
       dbPart.id = part.id
     }
-    let category
-    db.category.findAll({ where: { name: part.name } }).then(data => {
-      console.log(data)
-      category = data[0]
-      return category
-    }).then(category => {
+    db.category.findOne({ where: { name: part.name } }).then(category => {
+      console.log(category)
       return new Promise((resolve, reject) => {
         if (category === undefined) {
           db.category.create({ name: part.name }).then(data => resolve(data))
@@ -46,11 +42,11 @@ const fs = require('fs')
       fs.copyFile(part.picture, src, err => {
         if (err) throw err
       })
-      dbPart.category = category.id
+      dbPart.id_category = category.id
       dbPart.picture = pictureName
-      return dbPart.save()
-    }).then(newPart => {
-      event.sender.send('save-part-reply', newPart)
+      return db.part.create(dbPart)
+    }).then((newPart) => {
+      event.sender.send('save-part-reply', newPart.get({plain: true}))
     })
   })
 })()

@@ -28,6 +28,7 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   }, {
-    tableName: 'part'
+    tableName: 'part',
+    timestamps: false
   })
 }

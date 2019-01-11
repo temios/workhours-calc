@@ -14,12 +14,10 @@ export const DECREMENT_PART_COUNT = 'DECREMENT_PART_COUNT'
 export const CHANGE_REPORT_NAME = 'CHANGE_REPORT_NAME'
 export const LOAD_REPORT_FROM_ARCHIVE = 'LOAD_REPORT_FROM_ARCHIVE'
 
-export const addPartToDB = function (part) {
-  api.savePart(part).then(data => {
-    console.log(data)
-    return { type: ADD_PART_TO_DB, data }
-  })
-}
+export const addPartToDB = part => ({
+  type: ADD_PART_TO_DB,
+  part
+})
 
 export const updatePart = part => ({
   type: UPDATE_PART,
