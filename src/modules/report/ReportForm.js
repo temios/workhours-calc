@@ -7,7 +7,7 @@ import {
   Table,
   FormGroup,
   InputGroup,
-  Label,
+  Label
 } from 'reactstrap'
 import './ReportForm.css'
 
@@ -48,7 +48,7 @@ class ReportForm extends React.Component {
   addToArchive () {
     this.props.addReportToArchive({
       items: this.props.items,
-      name: this.props.reportName,
+      name: this.props.reportName
     })
     this.props.clearReport()
   }
@@ -62,40 +62,40 @@ class ReportForm extends React.Component {
       content =
         <Table>
           <thead>
-          <tr>
-            <th>#</th>
-            <th>Количество</th>
-            <th>Ч/Часы</th>
-            <th>Картинка</th>
-            <th>Название</th>
-            <th>Сумма</th>
-            <th>Удаление</th>
-          </tr>
+            <tr>
+              <th>#</th>
+              <th>Количество</th>
+              <th>Ч/Часы</th>
+              <th>Картинка</th>
+              <th>Название</th>
+              <th>Сумма</th>
+              <th>Удаление</th>
+            </tr>
           </thead>
           <tbody>
-          {this.props.items.map((item) => {
-            return (
-              <tr key={item.part.id}>
-                <td>{item.part.id}</td>
-                <td>
-                  <button disabled={item.count < 2} data-id={item.part.id}
-                          onClick={this.decrementCount}>-
-                  </button>
-                  {item.count}
-                  <button onClick={this.incrementCount}
-                          data-id={item.part.id}>+
-                  </button>
-                </td>
-                <td>{item.part.hours}</td>
-                <td><img src={item.part.picture} alt={''}
-                         className={'part-picture'}/></td>
-                <td>{item.part.name}</td>
-                <td>{item.count * item.part.hours}</td>
-                <td><Button color={'danger'} data-id={item.part.id}
-                            onClick={this.removePart}>Удалить</Button></td>
-              </tr>
-            )
-          })}
+            {this.props.items.map((item) => {
+              return (
+                <tr key={item.part.id}>
+                  <td>{item.part.id}</td>
+                  <td>
+                    <button disabled={item.count < 2} data-id={item.part.id}
+                      onClick={this.decrementCount}>-
+                    </button>
+                    {item.count}
+                    <button onClick={this.incrementCount}
+                      data-id={item.part.id}>+
+                    </button>
+                  </td>
+                  <td>{item.part.hour}</td>
+                  <td><img src={'images/' + item.part.picture} alt={''}
+                    className={'part-picture'} /></td>
+                  <td>{item.part.name}</td>
+                  <td>{item.count * item.part.hour}</td>
+                  <td><Button color={'danger'} data-id={item.part.id}
+                    onClick={this.removePart}>Удалить</Button></td>
+                </tr>
+              )
+            })}
           </tbody>
         </Table>
       buttons = <Row>
@@ -106,7 +106,7 @@ class ReportForm extends React.Component {
         </Col>
         <Col md={{ size: 2, offset: 8 }}>
           <Button color={'success'} disabled={this.props.reportName === ''}
-                  onClick={this.addToArchive}>
+            onClick={this.addToArchive}>
             Добавить в архив
           </Button>
         </Col>
@@ -117,8 +117,8 @@ class ReportForm extends React.Component {
           <Col md={10}>
             <InputGroup>
               <Input type='text' name='name' id='name'
-                     value={this.props.reportName} onChange={this.changeName}
-                     invalid={this.props.reportName === ''}/>
+                value={this.props.reportName} onChange={this.changeName}
+                invalid={this.props.reportName === ''} />
             </InputGroup>
           </Col>
         </FormGroup>
@@ -131,7 +131,7 @@ class ReportForm extends React.Component {
           </Col>
           <Col md={{ size: 1, offset: 5 }}>
             <Button color={'warning'}
-                    onClick={this.clearReport}>Очистить</Button>
+              onClick={this.clearReport}>Очистить</Button>
           </Col>
         </Row>
         {reportName}

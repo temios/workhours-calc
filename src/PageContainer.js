@@ -6,7 +6,7 @@ class PageContainer extends React.Component {
   render () {
     return (
       <div>
-        <MenuContainer/>
+        <MenuContainer />
         <Container>
           <Row className='pt-5'>
             <Col md='12'>{this.props.children}</Col>
@@ -17,4 +17,4 @@ class PageContainer extends React.Component {
   }
 }
 
-export default PageContainer;
+export default PageContainer

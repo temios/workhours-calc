@@ -1,8 +1,9 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const { app, BrowserWindow } = require('electron')
 
-const path = require('path');
-const isDev = require('electron-is-dev');
+const path = require('path')
+const isDev = require('electron-is-dev')
+const { db } = require('../src/electron/db')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -10,19 +11,19 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({show: false})
-  mainWindow.maximize();
-  mainWindow.setMenu(null);
-  
+  mainWindow = new BrowserWindow({ show: false })
+  mainWindow.maximize()
+  mainWindow.setMenu(null)
+
   mainWindow.loadURL(
-		isDev
-			? process.env.ELECTRON_START_URL
-			: `file://${path.join(__dirname, '../build/index.html')}`,
-	);
+    isDev
+      ? `http://localhost:3000`
+      : `file://${path.join(__dirname, '../build/index.html')}`
+  )
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
-  mainWindow.show();
+  mainWindow.show()
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
@@ -30,6 +31,15 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  db
+    .authenticate()
+    .then(() => {
+      console.log('Connection has been established successfully.')
+    })
+    .catch(err => {
+      console.error('Unable to connect to the database:', err)
+    })
 }
 
 // This method will be called when Electron has finished
@@ -56,3 +66,4 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+require('../src/electron/api')

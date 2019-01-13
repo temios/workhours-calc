@@ -4,7 +4,7 @@ import {
   NavbarToggler,
   Nav,
   NavItem,
-  NavLink,
+  NavLink
 } from 'reactstrap'
 import Collapse from 'reactstrap/lib/Collapse'
 import Link from 'react-router-dom/Link'
@@ -13,14 +13,14 @@ class MenuContainer extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isOpen: false,
+      isOpen: false
     }
     this.toggle = this.toggle.bind(this)
   }
 
-  toggle () { //TODO: wrap into redux
+  toggle () { // TODO: wrap into redux
     this.setState({
-      isOpen: !this.state.isOpen,
+      isOpen: !this.state.isOpen
     })
   }
 
@@ -28,7 +28,7 @@ class MenuContainer extends React.Component {
     return (
       <div>
         <Navbar color='dark' dark expand='md'>
-          <NavbarToggler onClick={this.toggle}/>
+          <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav navbar className='mr-auto'>
               <NavItem>
@@ -51,4 +51,4 @@ class MenuContainer extends React.Component {
   }
 }
 
-export default MenuContainer;
+export default MenuContainer

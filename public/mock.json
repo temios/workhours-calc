@@ -3,14 +3,14 @@
     {
       "id": 1,
       "category": "балка",
-      "hours": "80",
+      "hour": "80",
       "name": "балка поперечная",
       "picture": "./WorkHours.png"
     },
     {
       "id": 2,
       "category": "балка",
-      "hours": "60",
+      "hour": "60",
       "name": "балка продольная",
       "picture": "./WorkHours.png"
     }

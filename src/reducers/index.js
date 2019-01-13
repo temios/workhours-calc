@@ -6,5 +6,5 @@ import archiveReducer from './archiveReducer'
 export default combineReducers({
   reportReducer,
   catalogReducer,
-  archiveReducer,
+  archiveReducer
 })

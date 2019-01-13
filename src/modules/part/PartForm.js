@@ -6,7 +6,7 @@ import {
   Form,
   FormGroup,
   Input, InputGroup, InputGroupButtonDropdown,
-  Label, Row,
+  Label, Row
 } from 'reactstrap'
 import { Redirect } from 'react-router-dom'
 import './PartForm.css'
@@ -24,29 +24,29 @@ class PartForm extends React.Component {
     this.state = {
       dropdownOpen: false,
       part: this.props.part,
-      inputErrors: { category: '', name: '', hours: '', picture: '' },
+      inputErrors: { category: '', name: '', hour: '', picture: '' },
       inputValids: {
         category: this.props.isEdit,
         name: this.props.isEdit,
-        hours: this.props.isEdit,
-        picture: this.props.isEdit,
+        hour: this.props.isEdit,
+        picture: this.props.isEdit
       },
       inputTouched: {
         category: false,
         name: false,
-        hours: false,
-        picture: false,
+        hour: false,
+        picture: false
       },
       formValid: this.props.isEdit,
       redirect: Object.keys(this.props.part).length === 0,
       previewURL: this.props.isEdit ? this.props.part.picture : '',
-      isEdit: this.props.isEdit,
+      isEdit: this.props.isEdit
     }
   }
 
   toggleDropDown () {
     this.setState({
-      dropdownOpen: !this.state.dropdownOpen,
+      dropdownOpen: !this.state.dropdownOpen
     })
   }
 
@@ -56,12 +56,13 @@ class PartForm extends React.Component {
     let state = this.state
     state.part[name] = value
     if (name === 'picture') {
+      state.part[name] = e.target.files[0].path
       state.previewURL = URL.createObjectURL(e.target.files[0])
     }
     this.setState({
-        state: state,
-      },
-      () => { this.validateField(name, value) })
+      state: state
+    },
+    () => { this.validateField(name, value) })
   }
 
   validateField (fieldName, value) {
@@ -75,7 +76,7 @@ class PartForm extends React.Component {
     this.setState({
       inputValids: inputValids,
       inputErrors: inputErrors,
-      inputTouched: inputTouched,
+      inputTouched: inputTouched
     }, this.validateForm)
   }
 
@@ -83,7 +84,7 @@ class PartForm extends React.Component {
     let state = this.state
     state.part.category = event.target.innerHTML
     this.setState({
-      state: state,
+      state: state
     }, () => { this.validateField('category', state.part.category) })
   }
 
@@ -105,18 +106,17 @@ class PartForm extends React.Component {
     let categories = ''
     const redirect = this.state.redirect
     if (redirect) {
-      return <Redirect to='/choice' push={true}/> //TODO: redux browser history?
+      return <Redirect to='/choice' push /> // TODO: redux browser history?
     }
     if (this.props.categories) {
-      categories = <InputGroupButtonDropdown addonType="append"
-                                             isOpen={this.state.dropdownOpen}
-                                             toggle={this.toggleDropDown}>
-        <DropdownToggle caret>
-        </DropdownToggle>
+      categories = <InputGroupButtonDropdown addonType='append'
+        isOpen={this.state.dropdownOpen}
+        toggle={this.toggleDropDown}>
+        <DropdownToggle caret />
         <DropdownMenu>
           {this.props.categories.map((category) => {
             return <DropdownItem key={category.id}
-                                 onClick={this.chooseCategory}>{category.name}</DropdownItem>
+              onClick={this.chooseCategory}>{category.name}</DropdownItem>
           })}
         </DropdownMenu>
       </InputGroupButtonDropdown>
@@ -128,11 +128,11 @@ class PartForm extends React.Component {
           <Col md={10}>
             <InputGroup>
               <Input type='text' name='category'
-                     id='category' //TODO вынести в компонент
-                     value={this.state.part.category}
-                     invalid={!this.state.inputValids.category &&
+                id='category' // TODO вынести в компонент
+                value={this.state.part.category}
+                invalid={!this.state.inputValids.category &&
                      this.state.inputTouched.category}
-                     onChange={this.handleUserInput}/>
+                onChange={this.handleUserInput} />
               {this.props.categories && categories}
             </InputGroup>
           </Col>
@@ -141,41 +141,41 @@ class PartForm extends React.Component {
           <Label for='partName' md={2}>Наименование</Label>
           <Col md={10}>
             <Input type='text' name='name' id='name'
-                   defaultValue={this.state.part.name}
-                   invalid={!this.state.inputValids.name &&
+              defaultValue={this.state.part.name}
+              invalid={!this.state.inputValids.name &&
                    this.state.inputTouched.name}
-                   onChange={this.handleUserInput}/>
+              onChange={this.handleUserInput} />
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Label for='hours' md={2}>Кол-во часов</Label>
+          <Label for='hour' md={2}>Кол-во часов</Label>
           <Col md={10}>
-            <Input type='text' name='hours' id='hours'
-                   defaultValue={this.state.part.hours}
-                   invalid={!this.state.inputValids.hours &&
-                   this.state.inputTouched.hours}
-                   onChange={this.handleUserInput}/>
+            <Input type='text' name='hour' id='hour'
+              defaultValue={this.state.part.hour}
+              invalid={!this.state.inputValids.hour &&
+                   this.state.inputTouched.hour}
+              onChange={this.handleUserInput} />
           </Col>
         </FormGroup>
         <FormGroup row>
           <Label for='picture' md={2}>Картинка</Label>
           <Col md={10}>
             <Input type='file' name='picture' id='picture'
-                   accept=".png,.jpeg,.jpg"
-                   invalid={!this.state.inputValids.picture &&
+              accept='.png,.jpeg,.jpg'
+              invalid={!this.state.inputValids.picture &&
                    this.state.inputTouched.picture}
-                   onChange={this.handleUserInput}/>
+              onChange={this.handleUserInput} />
           </Col>
         </FormGroup>
         <Row>
           <Col md={10}>
-            <img src={this.state.previewURL} id={'part-picture'} alt=''/>
+            <img src={this.state.previewURL} id={'part-picture'} alt='' />
           </Col>
         </Row>
         <Button color='success'
-                disabled={!this.state.formValid}>{this.props.isEdit
-          ? 'Сохранить'
-          : 'Добавить'}</Button>
+          disabled={!this.state.formValid}>{this.props.isEdit
+            ? 'Сохранить'
+            : 'Добавить'}</Button>
       </Form>
     )
   }
