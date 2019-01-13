@@ -12,6 +12,7 @@ export const DECREMENT_PART_COUNT = 'DECREMENT_PART_COUNT'
 export const CHANGE_REPORT_NAME = 'CHANGE_REPORT_NAME'
 export const LOAD_REPORT_FROM_ARCHIVE = 'LOAD_REPORT_FROM_ARCHIVE'
 export const LOAD_ARCHIVE = 'LOAD_ARCHIVE'
+export const ALLOW_REWRITE_DIALOG = 'ALLOW_REWRITE_DIALOG'
 
 export const loadCategories = categories => ({
   type: LOAD_CATEGORIES,
@@ -73,12 +74,18 @@ export const changeReportName = reportName => ({
   reportName
 })
 
-export const loadReportFromArchive = report => ({
+export const loadReportFromArchive = (report, items) => ({
   type: LOAD_REPORT_FROM_ARCHIVE,
-  report
+  report,
+  items
 })
 
 export const loadArchive = reports => ({
   type: LOAD_ARCHIVE,
   reports
+})
+
+export  const allowRewriteDialog = (open) => ({
+  type: ALLOW_REWRITE_DIALOG,
+  open
 })

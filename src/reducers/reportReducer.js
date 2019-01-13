@@ -1,5 +1,5 @@
 import {
-  ADD_PART_TO_REPORT,
+  ADD_PART_TO_REPORT, ALLOW_REWRITE_DIALOG,
   CHANGE_REPORT_NAME,
   CLEAR_REPORT,
   DECREMENT_PART_COUNT,
@@ -10,7 +10,8 @@ import {
 
 let initialState = {
   items: [],
-  reportName: ''
+  reportName: '',
+  allowRewriteDialog: false
 }
 
 const reportReducer = (state = initialState, action) => {
@@ -21,7 +22,13 @@ const reportReducer = (state = initialState, action) => {
       items = [...state.items, action.item]
       return { ...state, items: items }
     case CLEAR_REPORT:
-      return { ...state, items: [], reportName: '' }
+      return {
+        ...state,
+        items: [],
+        reportName: '',
+        allowRewrite: false,
+        allowRewriteDialog: false
+      }
     case REMOVE_PART_FROM_REPORT:
       targetId = action.partId
       items = state.items.filter((item) => {
@@ -49,20 +56,9 @@ const reportReducer = (state = initialState, action) => {
     case CHANGE_REPORT_NAME:
       return { ...state, reportName: action.reportName }
     case LOAD_REPORT_FROM_ARCHIVE:
-      items = []
-      window.fetch('/mock.json').then((response) => { // TODO: remove from reducer
-        return response.json()
-      }).then((data) => {
-        data.parts.forEach((part) => {
-          action.report.items.forEach((item) => {
-            if (item.partId === part.id) {
-              items.push({ part: part, count: item.count })
-            }
-          })
-        })
-      })
-
-      return { ...state, reportName: action.report.name, items: items }
+      return { ...state, reportName: action.report.name, items: action.items }
+    case ALLOW_REWRITE_DIALOG:
+      return { ...state, allowRewriteDialog: action.open }
     default:
       return state
   }

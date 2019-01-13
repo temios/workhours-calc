@@ -10,6 +10,7 @@ import {
   Label
 } from 'reactstrap'
 import './ReportForm.css'
+import {ModalHeader, ModalBody, ModalFooter, Modal } from 'reactstrap'
 
 class ReportForm extends React.Component {
   constructor (props) {
@@ -20,6 +21,8 @@ class ReportForm extends React.Component {
     this.incrementCount = this.incrementCount.bind(this)
     this.changeName = this.changeName.bind(this)
     this.addToArchive = this.addToArchive.bind(this)
+    this.allowRewrite = this.allowRewrite.bind(this)
+    this.closeRewriteDialog = this.closeRewriteDialog.bind(this)
   }
 
   removePart (e) {
@@ -45,19 +48,28 @@ class ReportForm extends React.Component {
     this.props.changeReportName(e.target.value)
   }
 
+  allowRewrite () {
+    this.props.addReportToArchive({
+      items: this.props.items,
+      name: this.props.reportName
+    }, true)
+  }
+
   addToArchive () {
     this.props.addReportToArchive({
       items: this.props.items,
       name: this.props.reportName
-    })
-    this.props.clearReport()
+    }, false)
+  }
+
+  closeRewriteDialog () {
+    this.props.closeRewriteDialog()
   }
 
   render () {
     let content = 'Для добаление деталей перейдите к выбору.'
     let buttons = ''
     let reportName = ''
-    console.log(this.props.items)
     if (this.props.items && this.props.items.length > 0) {
       content =
         <Table>
@@ -137,6 +149,16 @@ class ReportForm extends React.Component {
         {reportName}
         {content}
         {buttons}
+        <Modal isOpen={this.props.rewriteDialog} toggle={this.closeRewriteDialog}>
+          <ModalHeader>Ошибка</ModalHeader>
+          <ModalBody>
+            Отчёт с таким именем уже есть, перезаписать?
+          </ModalBody>
+          <ModalFooter>
+            <Button color='danger' onClick={this.closeRewriteDialog}>Отмена</Button>
+            <Button color='success' onClick={this.allowRewrite}>Ок</Button>
+          </ModalFooter>
+        </Modal>
       </React.Fragment>
     )
   }

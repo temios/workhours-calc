@@ -18,7 +18,7 @@ class MenuContainer extends React.Component {
     this.toggle = this.toggle.bind(this)
   }
 
-  toggle () { // TODO: wrap into redux
+  toggle () {
     this.setState({
       isOpen: !this.state.isOpen
     })
@@ -35,10 +35,10 @@ class MenuContainer extends React.Component {
                 <NavLink tag={Link} to='/report'>Текущий отчёт</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to='/choice'>Выбор деталей</NavLink>
+                <NavLink tag={Link} to='/choice'>Каталог сборок</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to='/part'>Новая деталь</NavLink>
+                <NavLink tag={Link} to='/part'>Новая сборка</NavLink>
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to='/archive'>Архив отчётов</NavLink>

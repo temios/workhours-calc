@@ -6,7 +6,7 @@ class PartEdit extends React.Component {
   render () {
     return (
       <div>
-        <Header header='Редактирование' />
+        <Header header='Редактирование сборки' />
         <PartEditContainer />
       </div>
     )
