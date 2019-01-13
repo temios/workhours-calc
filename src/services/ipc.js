@@ -41,6 +41,15 @@ api.getReports = () => {
   })
 }
 
+api.getReportParts = (report) => {
+  return new Promise(resolve => {
+    ipcRenderer.send('get-report-parts', report)
+    ipcRenderer.on('get-report-parts-reply', (event, result) => {
+      resolve(result)
+    })
+  })
+}
+
 api.saveReport = (report) => {
   return new Promise((resolve, reject) => {
     ipcRenderer.send('save-report', report)
@@ -49,6 +58,15 @@ api.saveReport = (report) => {
     })
     ipcRenderer.on('error', (event, result) => {
       reject(new Error(result))
+    })
+  })
+}
+
+api.checkReportName = (reportName) => {
+  return new Promise(resolve => {
+    ipcRenderer.send('check-report-name', reportName)
+    ipcRenderer.on('check-report-name-reply', (event, result) => {
+      resolve(result)
     })
   })
 }
