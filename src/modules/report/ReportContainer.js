@@ -42,6 +42,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   changeReportName: (props) => {
     dispatch(changeReportName(props))
+  },
+  savePdf: (props) => {
+    api.savePdf(props)
   }
 })
 
@@ -49,7 +52,8 @@ function mapStateToProps (state) {
   return {
     items: state.reportReducer.items,
     reportName: state.reportReducer.reportName,
-    rewriteDialog: state.reportReducer.allowRewriteDialog
+    rewriteDialog: state.reportReducer.allowRewriteDialog,
+    sum: state.reportReducer.sum
   }
 }
 

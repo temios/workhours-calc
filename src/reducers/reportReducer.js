@@ -11,30 +11,35 @@ import {
 let initialState = {
   items: [],
   reportName: '',
-  allowRewriteDialog: false
+  allowRewriteDialog: false,
+  sum: 0
 }
 
 const reportReducer = (state = initialState, action) => {
   let items = []
+  let sum = 0
   let targetId
   switch (action.type) {
     case ADD_PART_TO_REPORT:
       items = [...state.items, action.item]
-      return { ...state, items: items }
+      sum = sumHour(items)
+      return { ...state, items: items, sum: sum }
     case CLEAR_REPORT:
       return {
         ...state,
         items: [],
         reportName: '',
         allowRewrite: false,
-        allowRewriteDialog: false
+        allowRewriteDialog: false,
+        sum: 0
       }
     case REMOVE_PART_FROM_REPORT:
       targetId = action.partId
       items = state.items.filter((item) => {
         return item.part.id !== targetId
       })
-      return { ...state, items: items }
+      sum = sumHour(items)
+      return { ...state, items: items, sum: sum }
     case INCREMENT_PART_COUNT:
       targetId = action.partId
       items = state.items.map((item) => {
@@ -43,7 +48,8 @@ const reportReducer = (state = initialState, action) => {
         }
         return item
       })
-      return { ...state, items: items }
+      sum = sumHour(items)
+      return { ...state, items: items, sum: sum }
     case DECREMENT_PART_COUNT:
       targetId = action.partId
       items = state.items.map((item) => {
@@ -52,16 +58,29 @@ const reportReducer = (state = initialState, action) => {
         }
         return item
       })
-      return { ...state, items: items }
+      sum = sumHour(items)
+      return { ...state, items: items, sum: sum }
     case CHANGE_REPORT_NAME:
       return { ...state, reportName: action.reportName }
     case LOAD_REPORT_FROM_ARCHIVE:
-      return { ...state, reportName: action.report.name, items: action.items }
+      sum = sumHour(action.items)
+      return {
+        ...state,
+        reportName: action.report.name,
+        items: action.items,
+        sum: sum
+      }
     case ALLOW_REWRITE_DIALOG:
       return { ...state, allowRewriteDialog: action.open }
     default:
       return state
   }
+}
+
+function sumHour (items) {
+  return items.reduce((sum, item) => {
+    return sum + (item.count * item.part.hour)
+  }, 0)
 }
 
 export default reportReducer

@@ -71,4 +71,8 @@ api.checkReportName = (reportName) => {
   })
 }
 
+api.savePdf = (report) => {
+  ipcRenderer.send('generate-pdf', report)
+}
+
 export default api

@@ -1,8 +1,9 @@
-const { ipcMain } = require('electron')
+const { ipcMain, dialog } = require('electron')
 const { db } = require('./db')
 const randomstring = require('randomstring')
 const path = require('path')
 const fs = require('fs')
+const PdfPrinter = require('pdfmake')
 
 ;(function startListen () {
   ipcMain.on('get-categories', event => {
@@ -109,7 +110,7 @@ const fs = require('fs')
     dbReport.name = report.name
     let where = { name: report.name }
     db.report.findOrCreate({
-      where: where,
+      where: where
     }).then(newReport => { // TODO: fix date bug
       let currentReport = newReport[0].get({ plain: true })
       console.log(newReport)
@@ -130,5 +131,59 @@ const fs = require('fs')
     }).then(newReport => {
       event.sender.send('save-report-reply', newReport)
     })
+  })
+
+  ipcMain.on('generate-pdf', (event, report) => {
+    dialog.showSaveDialog(
+      null,
+      {
+        filters: [
+          {
+            name: 'Adobe PDF',
+            extensions: ['pdf']
+          }]
+      },
+      ((savePath) => {
+        let content = [{ text: 'Отчёт: ' + report.name }]
+        let body = [
+          [
+            { text: 'Нaименование' },
+            { text: 'Кол-во сборок' },
+            { text: 'Кол-во часов' },
+            { text: 'Сумма часов' }
+          ]]
+        report.items.forEach((item) => {
+          let row = [
+            item.part.name,
+            item.count,
+            item.part.hour,
+            item.count * item.part.hour]
+          body.push(row)
+        })
+        let table = {
+          table: {
+            headerRows: 1,
+            body: body
+          }
+        }
+        content.push(table)
+        content.push({ text: 'Итого: ' + report.sum })
+        let fontsPath = path.resolve(__dirname, '../../public/fonts')
+        console.log(fontsPath)
+        let fonts = {
+          Roboto: {
+            normal: path.resolve(fontsPath, 'Roboto-Regular.ttf'),
+            bold: path.resolve(fontsPath, 'Roboto-Medium.ttf'),
+            italics: path.resolve(fontsPath, 'Roboto-Italic.ttf'),
+            bolditalics: path.resolve(fontsPath, 'Roboto-MediumItalic.ttf')
+          }
+        }
+        let printer = new PdfPrinter(fonts)
+        let pdf = printer.createPdfKitDocument(
+          { content: content })
+        pdf.pipe(fs.createWriteStream(savePath))
+        pdf.end()
+      }))
+
   })
 })()
