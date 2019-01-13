@@ -10,7 +10,7 @@ import {
   Label
 } from 'reactstrap'
 import './ReportForm.css'
-import {ModalHeader, ModalBody, ModalFooter, Modal } from 'reactstrap'
+import { ModalHeader, ModalBody, ModalFooter, Modal } from 'reactstrap'
 
 class ReportForm extends React.Component {
   constructor (props) {
@@ -23,6 +23,7 @@ class ReportForm extends React.Component {
     this.addToArchive = this.addToArchive.bind(this)
     this.allowRewrite = this.allowRewrite.bind(this)
     this.closeRewriteDialog = this.closeRewriteDialog.bind(this)
+    this.savePdf = this.savePdf.bind(this)
   }
 
   removePart (e) {
@@ -66,59 +67,69 @@ class ReportForm extends React.Component {
     this.props.closeRewriteDialog()
   }
 
+  savePdf () {
+    this.props.savePdf({
+      items: this.props.items,
+      name: this.props.reportName,
+      sum: this.props.sum
+    })
+  }
+
   render () {
     let content = 'Для добаление деталей перейдите к выбору.'
     let buttons = ''
     let reportName = ''
+    let sum = ''
     if (this.props.items && this.props.items.length > 0) {
       content =
         <Table>
           <thead>
-            <tr>
-              <th>#</th>
-              <th>Количество</th>
-              <th>Ч/Часы</th>
-              <th>Картинка</th>
-              <th>Название</th>
-              <th>Сумма</th>
-              <th>Удаление</th>
-            </tr>
+          <tr>
+            <th>#</th>
+            <th>Количество</th>
+            <th>Ч/Часы</th>
+            <th>Картинка</th>
+            <th>Название</th>
+            <th>Сумма</th>
+            <th>Удаление</th>
+          </tr>
           </thead>
           <tbody>
-            {this.props.items.map((item) => {
-              return (
-                <tr key={item.part.id}>
-                  <td>{item.part.id}</td>
-                  <td>
-                    <button disabled={item.count < 2} data-id={item.part.id}
-                      onClick={this.decrementCount}>-
-                    </button>
-                    {item.count}
-                    <button onClick={this.incrementCount}
-                      data-id={item.part.id}>+
-                    </button>
-                  </td>
-                  <td>{item.part.hour}</td>
-                  <td><img src={'images/' + item.part.picture} alt={''}
-                    className={'part-picture'} /></td>
-                  <td>{item.part.name}</td>
-                  <td>{item.count * item.part.hour}</td>
-                  <td><Button color={'danger'} data-id={item.part.id}
-                    onClick={this.removePart}>Удалить</Button></td>
-                </tr>
-              )
-            })}
+          {this.props.items.map((item) => {
+            return (
+              <tr key={item.part.id}>
+                <td>{item.part.id}</td>
+                <td>
+                  <button disabled={item.count < 2} data-id={item.part.id}
+                          onClick={this.decrementCount}>-
+                  </button>
+                  {item.count}
+                  <button onClick={this.incrementCount}
+                          data-id={item.part.id}>+
+                  </button>
+                </td>
+                <td>{item.part.hour}</td>
+                <td><img src={'images/' + item.part.picture} alt={''}
+                         className={'part-picture'}/></td>
+                <td>{item.part.name}</td>
+                <td>{item.count * item.part.hour}</td>
+                <td><Button color={'danger'} data-id={item.part.id}
+                            onClick={this.removePart}>Удалить</Button></td>
+              </tr>
+            )
+          })}
           </tbody>
         </Table>
       buttons = <Row>
         <Col md={2}>
-          <Button color={'success'} disabled={this.props.reportName === ''}>
+          <Button color={'success'} disabled={this.props.reportName === ''}
+                  onClick={this.savePdf}>
             Сохранить как
           </Button>
         </Col>
         <Col md={{ size: 2, offset: 8 }}>
           <Button color={'success'} disabled={this.props.reportName === ''}
-            onClick={this.addToArchive}>
+                  onClick={this.addToArchive}>
             Добавить в архив
           </Button>
         </Col>
@@ -129,11 +140,12 @@ class ReportForm extends React.Component {
           <Col md={10}>
             <InputGroup>
               <Input type='text' name='name' id='name'
-                value={this.props.reportName} onChange={this.changeName}
-                invalid={this.props.reportName === ''} />
+                     value={this.props.reportName} onChange={this.changeName}
+                     invalid={this.props.reportName === ''}/>
             </InputGroup>
           </Col>
         </FormGroup>
+      sum = <p>Итого: {this.props.sum}</p>
     }
     return (
       <React.Fragment>
@@ -143,19 +155,22 @@ class ReportForm extends React.Component {
           </Col>
           <Col md={{ size: 1, offset: 5 }}>
             <Button color={'warning'}
-              onClick={this.clearReport}>Очистить</Button>
+                    onClick={this.clearReport}>Очистить</Button>
           </Col>
         </Row>
         {reportName}
         {content}
+        {sum}
         {buttons}
-        <Modal isOpen={this.props.rewriteDialog} toggle={this.closeRewriteDialog}>
+        <Modal isOpen={this.props.rewriteDialog}
+               toggle={this.closeRewriteDialog}>
           <ModalHeader>Ошибка</ModalHeader>
           <ModalBody>
             Отчёт с таким именем уже есть, перезаписать?
           </ModalBody>
           <ModalFooter>
-            <Button color='danger' onClick={this.closeRewriteDialog}>Отмена</Button>
+            <Button color='danger'
+                    onClick={this.closeRewriteDialog}>Отмена</Button>
             <Button color='success' onClick={this.allowRewrite}>Ок</Button>
           </ModalFooter>
         </Modal>
