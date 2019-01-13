@@ -4,7 +4,7 @@ module.exports = function (sequelize, DataTypes) {
   return sequelize.define('report_part', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      autoIncrement: true,
       primaryKey: true
     },
     id_report: {
@@ -28,6 +28,7 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'report_part'
+    tableName: 'report_part',
+    timestamps: false
   })
 }

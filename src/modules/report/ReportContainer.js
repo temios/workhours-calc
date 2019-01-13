@@ -8,6 +8,7 @@ import {
   changeReportName
 } from '../../actions'
 import ReportForm from './ReportForm'
+import api from '../../services/ipc'
 
 const mapDispatchToProps = (dispatch) => ({
   clearReport: (props) => {
@@ -17,7 +18,10 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(removePartFromReport(props))
   },
   addReportToArchive: (props) => {
-    dispatch(addReportToArchive(props))
+    api.saveReport(props).then(report => {
+      dispatch(addReportToArchive(report))
+      dispatch(clearReport())
+    })
   },
   incrementPartCount: (props) => {
     dispatch(incrementPartCount(props))

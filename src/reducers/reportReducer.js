@@ -21,7 +21,7 @@ const reportReducer = (state = initialState, action) => {
       items = [...state.items, action.item]
       return { ...state, items: items }
     case CLEAR_REPORT:
-      return { ...state, items: [] }
+      return { ...state, items: [], reportName: '' }
     case REMOVE_PART_FROM_REPORT:
       targetId = action.partId
       items = state.items.filter((item) => {

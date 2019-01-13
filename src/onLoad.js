@@ -1,5 +1,10 @@
 import api from './services/ipc'
-import { addCategory, loadCategories, reloadParts } from './actions'
+import {
+  addCategory,
+  loadArchive,
+  loadCategories,
+  reloadParts
+} from './actions'
 const { ipcRenderer } = window.require('electron')
 
 export const onLoad = store => {
@@ -14,6 +19,10 @@ export const onLoad = store => {
         store.dispatch(reloadParts(currentCat.id, parts))
       })
     }
+  })
+
+  api.getReports().then(data => {
+    store.dispatch(loadArchive(data))
   })
 
   ipcRenderer.on('add-category-reply', (event, category) => {

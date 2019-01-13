@@ -32,4 +32,25 @@ api.getParts = (idCategory) => {
   })
 }
 
+api.getReports = () => {
+  return new Promise(resolve => {
+    ipcRenderer.send('get-reports')
+    ipcRenderer.on('get-reports-reply', (event, result) => {
+      resolve(result)
+    })
+  })
+}
+
+api.saveReport = (report) => {
+  return new Promise((resolve, reject) => {
+    ipcRenderer.send('save-report', report)
+    ipcRenderer.on('save-report-reply', (event, result) => {
+      resolve(result)
+    })
+    ipcRenderer.on('error', (event, result) => {
+      reject(new Error(result))
+    })
+  })
+}
+
 export default api

@@ -4,7 +4,7 @@ module.exports = function (sequelize, DataTypes) {
   return sequelize.define('report', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      autoIncrement: true,
       primaryKey: true
     },
     name: {
@@ -13,15 +13,16 @@ module.exports = function (sequelize, DataTypes) {
     },
     date_created: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: '(datetime(now,localtime))'
+      allowNull: true,
+      defaultValue: sequelize.DATE
     },
     date_updated: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: '(datetime(now,localtime))'
+      allowNull: true,
+      defaultValue: sequelize.DATE
     }
   }, {
-    tableName: 'report'
+    tableName: 'report',
+    timestamps: false
   })
 }

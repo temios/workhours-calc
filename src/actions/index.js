@@ -11,6 +11,7 @@ export const INCREMENT_PART_COUNT = 'INCREMENT_PART_COUNT'
 export const DECREMENT_PART_COUNT = 'DECREMENT_PART_COUNT'
 export const CHANGE_REPORT_NAME = 'CHANGE_REPORT_NAME'
 export const LOAD_REPORT_FROM_ARCHIVE = 'LOAD_REPORT_FROM_ARCHIVE'
+export const LOAD_ARCHIVE = 'LOAD_ARCHIVE'
 
 export const loadCategories = categories => ({
   type: LOAD_CATEGORIES,
@@ -75,4 +76,9 @@ export const changeReportName = reportName => ({
 export const loadReportFromArchive = report => ({
   type: LOAD_REPORT_FROM_ARCHIVE,
   report
+})
+
+export const loadArchive = reports => ({
+  type: LOAD_ARCHIVE,
+  reports
 })

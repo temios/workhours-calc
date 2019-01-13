@@ -18,6 +18,12 @@ const fs = require('fs')
     })
   })
 
+  ipcMain.on('get-reports', event => {
+    db.report.findAll( {raw: true }).then(reports => {
+      event.sender.send('get-reports-reply', reports)
+    })
+  })
+
   ipcMain.on('save-part', (event, part) => {
     let dbPart = {
       name: part.name,
@@ -69,5 +75,30 @@ const fs = require('fs')
       .catch(err => {
         event.sender.send('error', err.message)
       })
+  })
+
+  ipcMain.on('save-report', (event, report) => {
+    console.log(report)
+    let dbReport = {}
+    dbReport.name = report.name
+    let where = {name: report.name}
+    db.report.findOrCreate({where: where, raw: true}).then(newReport => {
+      let currentReport = newReport[0]
+      console.log(newReport)
+      db.reportPart.destroy({where: {id_report: currentReport.id}}).then(() => {
+        report.items.forEach((item) => {
+          let dbReportPart = {
+            id_report: currentReport.id,
+            id_part: item.part.id,
+            count: item.count
+          }
+          console.log(dbReportPart)
+          db.reportPart.create(dbReportPart)
+        })
+      })
+      return currentReport
+    }).then(newReport => {
+      event.sender.send('save-report-reply', newReport)
+    })
   })
 })()
