@@ -13,6 +13,8 @@ export const CHANGE_REPORT_NAME = 'CHANGE_REPORT_NAME'
 export const LOAD_REPORT_FROM_ARCHIVE = 'LOAD_REPORT_FROM_ARCHIVE'
 export const LOAD_ARCHIVE = 'LOAD_ARCHIVE'
 export const ALLOW_REWRITE_DIALOG = 'ALLOW_REWRITE_DIALOG'
+export const SHOW_ALERT = 'SHOW_ALERT'
+export const CLOSE_ALERT = 'CLOSE_ALERT'
 
 export const loadCategories = categories => ({
   type: LOAD_CATEGORIES,
@@ -88,4 +90,14 @@ export const loadArchive = reports => ({
 export  const allowRewriteDialog = (open) => ({
   type: ALLOW_REWRITE_DIALOG,
   open
+})
+
+export const showAlert = (alert) => ({
+  type: SHOW_ALERT,
+  text: alert.text,
+  color: alert.color
+})
+
+export const closeAlert = () => ({
+  type: CLOSE_ALERT
 })
