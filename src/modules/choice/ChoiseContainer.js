@@ -1,10 +1,13 @@
 import { connect } from 'react-redux'
-import { addPartToReport, editPart, reloadParts } from '../../actions'
+import { addPartToReport, editPart, reloadParts, showAlert } from '../../actions'
 import ChoiceGrid from './ChoiceGrid'
 import api from '../../services/ipc'
 
 const mapDispatchToProps = (dispatch) => ({
   addPartToReport: (properties) => {
+    dispatch(
+      showAlert({ text: 'Сборка добавлена в отчёт.', color: 'success' })
+    )
     dispatch(addPartToReport(properties))
   },
   reloadParts: (id) => {

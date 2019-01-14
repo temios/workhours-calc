@@ -6,7 +6,8 @@ import {
   incrementPartCount,
   decrementPartCount,
   changeReportName,
-  allowRewriteDialog
+  allowRewriteDialog,
+  showAlert
 } from '../../actions'
 import ReportForm from './ReportForm'
 import api from '../../services/ipc'
@@ -25,6 +26,9 @@ const mapDispatchToProps = (dispatch) => ({
           dispatch(addReportToArchive(report))
           dispatch(clearReport())
           dispatch(allowRewriteDialog(false))
+          dispatch(
+            showAlert({ text: 'Отчет добавлен в архив.', color: 'success' })
+          )
         })
       } else {
         dispatch(allowRewriteDialog(true))
@@ -44,7 +48,11 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(changeReportName(props))
   },
   savePdf: (props) => {
-    api.savePdf(props)
+    api.savePdf(props).then(() => {
+      dispatch(
+        showAlert({ text: 'Отчет сохранен в pdf.', color: 'success' })
+      )
+    })
   }
 })
 

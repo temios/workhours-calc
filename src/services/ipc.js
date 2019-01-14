@@ -17,9 +17,6 @@ api.savePart = (part) => {
     ipcRenderer.on('save-part-reply', (event, result) => {
       resolve(result)
     })
-    ipcRenderer.on('error', (event, result) => {
-      reject(new Error(result))
-    })
   })
 }
 
@@ -28,9 +25,6 @@ api.editPart = (part) => {
     ipcRenderer.send('edit-part', part)
     ipcRenderer.on('edit-part-reply', (event, result) => {
       resolve(result)
-    })
-    ipcRenderer.on('error', (event, result) => {
-      reject(new Error(result))
     })
   })
 }
@@ -68,9 +62,6 @@ api.saveReport = (report) => {
     ipcRenderer.on('save-report-reply', (event, result) => {
       resolve(result)
     })
-    ipcRenderer.on('error', (event, result) => {
-      reject(new Error(result))
-    })
   })
 }
 
@@ -84,7 +75,12 @@ api.checkReportName = (reportName) => {
 }
 
 api.savePdf = (report) => {
-  ipcRenderer.send('generate-pdf', report)
+  return new Promise(resolve => {
+    ipcRenderer.send('generate-pdf', report)
+    ipcRenderer.on('generate-pdf-reply', (event, result) => {
+      resolve(result)
+    })
+  })
 }
 
 export default api
