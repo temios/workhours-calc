@@ -39,7 +39,7 @@ class PartForm extends React.Component {
       },
       formValid: this.props.isEdit,
       redirect: Object.keys(this.props.part).length === 0,
-      previewURL: this.props.isEdit ? this.props.part.picture : '',
+      previewURL: this.props.isEdit ? 'images/' + this.props.part.picture : '',
       isEdit: this.props.isEdit
     }
   }

@@ -23,6 +23,18 @@ api.savePart = (part) => {
   })
 }
 
+api.editPart = (part) => {
+  return new Promise((resolve, reject) => {
+    ipcRenderer.send('edit-part', part)
+    ipcRenderer.on('edit-part-reply', (event, result) => {
+      resolve(result)
+    })
+    ipcRenderer.on('error', (event, result) => {
+      reject(new Error(result))
+    })
+  })
+}
+
 api.getParts = (idCategory) => {
   return new Promise(resolve => {
     ipcRenderer.send('get-parts', idCategory)
