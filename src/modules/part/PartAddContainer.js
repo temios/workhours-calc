@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PartForm from './PartForm'
-import { reloadParts } from '../../actions'
+import { reloadParts, showAlert } from '../../actions'
 import api from '../../services/ipc'
 
 const mapDispatchToProps = (dispatch) => ({
@@ -11,7 +11,10 @@ const mapDispatchToProps = (dispatch) => ({
           dispatch(reloadParts(response.id_category, parts))
         })
       },
-      err => console.log(err.message)
+      err => dispatch(showAlert({
+        text: err.message,
+        color: 'danger'
+      }))
     )
   }
 })
