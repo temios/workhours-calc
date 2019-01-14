@@ -54,10 +54,12 @@ class PartForm extends React.Component {
     const name = e.target.name
     const value = e.target.value
     let state = this.state
-    state.part[name] = value
     if (name === 'picture') {
+      if (e.target.files.length === 0) return
       state.part[name] = e.target.files[0].path
       state.previewURL = URL.createObjectURL(e.target.files[0])
+    } else {
+      state.part[name] = value
     }
     this.setState({
       state: state
