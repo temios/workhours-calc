@@ -18,9 +18,15 @@ db.part = db.import('./models/part')
 db.reportPart = db.import('./models/report_part')
 db.report = db.import('./models/report')
 
-db.part.hasMany(db.reportPart, {foreignKey: 'id_part'})
-db.report.hasMany(db.reportPart, {foreignKey: 'id_report'})
-db.report.belongsToMany(db.part, {through: db.reportPart, foreignKey: 'id_part'})
-db.part.belongsToMany(db.report, {through: db.reportPart, foreignKey: 'id_report'})
+db.part.hasMany(db.reportPart, { foreignKey: 'id_part' })
+db.report.hasMany(db.reportPart, { foreignKey: 'id_report' })
+db.report.belongsToMany(db.part, {
+  through: db.reportPart,
+  foreignKey: 'id_part'
+})
+db.part.belongsToMany(db.report, {
+  through: db.reportPart,
+  foreignKey: 'id_report'
+})
 
 module.exports.db = db

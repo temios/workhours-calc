@@ -4,12 +4,22 @@ const randomstring = require('randomstring')
 const path = require('path')
 const fs = require('fs')
 const PdfPrinter = require('pdfmake')
+const { logger } = require('./logger')
 
 ;(function startListen () {
   ipcMain.on('get-categories', event => {
-    db.category.findAll({ raw: true }).then(categories => {
-      event.sender.send('categories-reply', categories)
-    })
+    db.category
+      .findAll({ raw: true })
+      .then(categories => {
+        event.sender.send('categories-reply', categories)
+      })
+      .catch(err => {
+        event.sender.send(
+          'error',
+          'Произошла ошибка во время выборки категорий.'
+        )
+        logger.error(err.message)
+      })
   })
 
   ipcMain.on('get-parts', (event, categoryId) => {
@@ -18,12 +28,25 @@ const PdfPrinter = require('pdfmake')
       .then(parts => {
         event.sender.send('get-parts-reply', parts)
       })
+      .catch(err => {
+        event.sender.send(
+          'error',
+          'Произошла ошибка во время выборки сборок для категории.'
+        )
+        logger.error(err.message)
+      })
   })
 
   ipcMain.on('get-reports', event => {
-    db.report.findAll({ raw: true }).then(reports => {
-      event.sender.send('get-reports-reply', reports)
-    })
+    db.report
+      .findAll({ raw: true })
+      .then(reports => {
+        event.sender.send('get-reports-reply', reports)
+      })
+      .catch(err => {
+        event.sender.send('error', 'Произошла ошибка во время выборки отчётов.')
+        logger.error(err.message)
+      })
   })
 
   ipcMain.on('get-report-parts', (event, report) => {
@@ -47,12 +70,28 @@ const PdfPrinter = require('pdfmake')
         })
         event.sender.send('get-report-parts-reply', response)
       })
+      .catch((err) => {
+        event.sender.send(
+          'error',
+          'Произошла ошибка во время выборки сборок для отчёта.'
+        )
+        logger.error(err.message)
+      })
   })
 
   ipcMain.on('check-report-name', (event, name) => {
-    db.report.findOne({ where: { name: name }, raw: true }).then(report => {
-      event.sender.send('check-report-name-reply', !!report)
-    })
+    db.report
+      .findOne({ where: { name: name }, raw: true })
+      .then(report => {
+        event.sender.send('check-report-name-reply', !!report)
+      })
+      .catch((err) => {
+        event.sender.send(
+          'error',
+          'Произошла ошибка во время проверки имени отчёта.'
+        )
+        logger.error(err.message)
+      })
   })
 
   ipcMain.on('save-part', (event, part) => {
@@ -102,50 +141,62 @@ const PdfPrinter = require('pdfmake')
       })
       .catch(err => {
         event.sender.send('error', err.message)
+        logger.error(err.message)
       })
   })
 
   ipcMain.on('edit-part', async (event, part) => {
-    const dbPart = await db.part.findOne({ where: { id: part.id }, raw: true })
-    const existPart = await db.part.findOne({
-      where: { name: part.name, id: { [db.Op.ne]: dbPart.id } },
-      raw: true
-    })
-    if (existPart) {
-      return event.sender.send(
-        'error',
-        'Cуществует другая сборка с таким именем'
-      )
-    }
-    let dbCategory = await db.category.findOne({
-      where: { name: part.category },
-      raw: true
-    })
-    if (!dbCategory) {
-      dbCategory = await db.category
-        .create({ name: part.name })
-        .then(category => {
-          return Promise.resolve(category.get({ plain: true }))
-        })
-      event.sender.send('add-category-reply', dbCategory)
-    }
-    if (part.picture !== dbPart.picture) {
-      let pictureName =
-        randomstring.generate(32) + '.' + part.picture.split('.').pop()
-      let src = path.resolve('public/images/', pictureName)
-      fs.copyFile(part.picture, src, err => {
-        if (err) throw err
+    try {
+      const dbPart = await db.part.findOne({
+        where: { id: part.id },
+        raw: true
       })
-      dbPart.picture = pictureName
+      const existPart = await db.part.findOne({
+        where: { name: part.name, id: { [db.Op.ne]: dbPart.id } },
+        raw: true
+      })
+      if (existPart) {
+        return event.sender.send(
+          'error',
+          'Cуществует другая сборка с таким именем'
+        )
+      }
+      let dbCategory = await db.category.findOne({
+        where: { name: part.category },
+        raw: true
+      })
+      if (!dbCategory) {
+        dbCategory = await db.category
+          .create({ name: part.name })
+          .then(category => {
+            return Promise.resolve(category.get({ plain: true }))
+          })
+        event.sender.send('add-category-reply', dbCategory)
+      }
+      if (part.picture !== dbPart.picture) {
+        let pictureName =
+          randomstring.generate(32) + '.' + part.picture.split('.').pop()
+        let src = path.resolve('public/images/', pictureName)
+        fs.copyFile(part.picture, src, err => {
+          if (err) throw err
+        })
+        dbPart.picture = pictureName
+      }
+      dbPart.hour = part.hour
+      dbPart.id_category = dbCategory.id
+      dbPart.name = part.name
+      const updated = await db.part.update(dbPart, { where: { id: dbPart.id } })
+      if (updated) {
+        return event.sender.send('edit-part-reply', dbPart)
+      }
+      return event.sender.send('error', 'Не удалось сохранить сборку.')
+    } catch (err) {
+      event.sender.send(
+        'error',
+        'Произошла ошибка во время редактирования сборки.'
+      )
+      logger.error(err.message)
     }
-    dbPart.hour = part.hour
-    dbPart.id_category = dbCategory.id
-    dbPart.name = part.name
-    const updated = await db.part.update(dbPart, { where: { id: dbPart.id } })
-    if (updated) {
-      return event.sender.send('edit-part-reply', dbPart)
-    }
-    return event.sender.send('error', 'Не удалось сохранить сборку.')
   })
 
   ipcMain.on('save-report', (event, report) => {
@@ -176,60 +227,73 @@ const PdfPrinter = require('pdfmake')
       .then(newReport => {
         event.sender.send('save-report-reply', newReport)
       })
+      .catch((err) => {
+        event.sender.send(
+          'error',
+          'Произошла ошибка во время выборки категорий.'
+        )
+        logger.error(err.message)
+      })
   })
 
   ipcMain.on('generate-pdf', (event, report) => {
-    dialog.showSaveDialog(
-      null,
-      {
-        filters: [
-          {
-            name: 'Adobe PDF',
-            extensions: ['pdf']
-          }
-        ]
-      },
-      savePath => {
-        let content = [{ text: 'Отчёт: ' + report.name }]
-        let body = [
-          [
-            { text: 'Нaименование' },
-            { text: 'Кол-во сборок' },
-            { text: 'Кол-во часов' },
-            { text: 'Сумма часов' }
+    try {
+      dialog.showSaveDialog(
+        null,
+        {
+          filters: [
+            {
+              name: 'Adobe PDF',
+              extensions: ['pdf']
+            }
           ]
-        ]
-        report.items.forEach(item => {
-          let row = [
-            item.part.name,
-            item.count,
-            item.part.hour,
-            item.count * item.part.hour
+        },
+        savePath => {
+          let content = [{ text: 'Отчёт: ' + report.name }]
+          let body = [
+            [
+              { text: 'Нaименование' },
+              { text: 'Кол-во сборок' },
+              { text: 'Кол-во часов' },
+              { text: 'Сумма часов' }
+            ]
           ]
-          body.push(row)
-        })
-        let table = {
-          table: {
-            headerRows: 1,
-            body: body
+          report.items.forEach(item => {
+            let row = [
+              item.part.name,
+              item.count,
+              item.part.hour,
+              item.count * item.part.hour
+            ]
+            body.push(row)
+          })
+          let table = {
+            table: {
+              headerRows: 1,
+              body: body
+            }
           }
-        }
-        content.push(table)
-        content.push({ text: 'Итого: ' + report.sum })
-        let fontsPath = path.resolve(__dirname, '../../public/fonts')
-        let fonts = {
-          Roboto: {
-            normal: path.resolve(fontsPath, 'Roboto-Regular.ttf'),
-            bold: path.resolve(fontsPath, 'Roboto-Medium.ttf'),
-            italics: path.resolve(fontsPath, 'Roboto-Italic.ttf'),
-            bolditalics: path.resolve(fontsPath, 'Roboto-MediumItalic.ttf')
+          content.push(table)
+          content.push({ text: 'Итого: ' + report.sum })
+          let fontsPath = path.resolve(__dirname, '../../public/fonts')
+          let fonts = {
+            Roboto: {
+              normal: path.resolve(fontsPath, 'Roboto-Regular.ttf'),
+              bold: path.resolve(fontsPath, 'Roboto-Medium.ttf'),
+              italics: path.resolve(fontsPath, 'Roboto-Italic.ttf'),
+              bolditalics: path.resolve(fontsPath, 'Roboto-MediumItalic.ttf')
+            }
           }
+          let printer = new PdfPrinter(fonts)
+          let pdf = printer.createPdfKitDocument({ content: content })
+          pdf.pipe(fs.createWriteStream(savePath))
+          pdf.end()
+          event.sender.send('generate-pdf-reply', true)
         }
-        let printer = new PdfPrinter(fonts)
-        let pdf = printer.createPdfKitDocument({ content: content })
-        pdf.pipe(fs.createWriteStream(savePath))
-        pdf.end()
-      }
-    )
+      )
+    } catch (err) {
+      event.sender.send('error', 'Произошла ошибка во время создания pdf.')
+      logger.error(err.message)
+    }
   })
 })()

@@ -7,14 +7,13 @@ const mapDispatchToProps = (dispatch) => ({
   addPart: (properties) => {
     api.savePart(properties).then(
       response => {
+        dispatch(
+          showAlert({ text: 'Сборка успешно сохранена.', color: 'success' })
+        )
         api.getParts(response.id_category).then(parts => {
           dispatch(reloadParts(response.id_category, parts))
         })
-      },
-      err => dispatch(showAlert({
-        text: err.message,
-        color: 'danger'
-      }))
+      }
     )
   }
 })
