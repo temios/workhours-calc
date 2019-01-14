@@ -1,8 +1,8 @@
 import {
   EDIT_PART,
   RELOAD_PARTS,
-  UPDATE_PART,
-  LOAD_CATEGORIES, ADD_CATEGORY
+  LOAD_CATEGORIES,
+  ADD_CATEGORY
 } from '../actions'
 
 const initState = {
@@ -19,26 +19,24 @@ const catalogReducer = (state = initState, action) => {
       return { ...state, categories: action.categories }
     case ADD_CATEGORY:
       return { ...state, categories: [...state.categories, action.category] }
-    case UPDATE_PART:
-      let parts = state.parts.map(part => {
-        return part.id === action.part.id ? action.part : part
-      })
-      console.log(parts)
-      return {
-        ...state,
-        parts: parts
-      }
     case RELOAD_PARTS: {
       return {
         ...state,
-        currentCategory: action.categoryId,
+        currentCategory: Number.parseInt(action.categoryId),
         currentParts: action.parts
       }
     }
     case EDIT_PART: {
+      console.log(state)
+      const category = state.categories.filter(cat => {
+        return cat.id === state.currentCategory
+      })[0]
+      let editPart = action.editPart
+      editPart.category = category.name
+      console.log(editPart)
       return {
         ...state,
-        editPart: action.editPart
+        editPart: editPart
       }
     }
     default:

@@ -19,7 +19,7 @@ const archiveReducer = (state = initState, action) => {
       return { ...state, reports: newReports }
     case LOAD_ARCHIVE:
       newReports = sortArchive(action.reports)
-      return {...state, reports: newReports}
+      return { ...state, reports: newReports }
     default:
       return state
   }
