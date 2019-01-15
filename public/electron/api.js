@@ -7,6 +7,7 @@ const PdfPrinter = require('pdfmake')
 const { logger } = require('./logger')
 
 ;(function startListen () {
+  logger.info('start app')
   ipcMain.on('get-categories', event => {
     db.category
       .findAll({ raw: true })
