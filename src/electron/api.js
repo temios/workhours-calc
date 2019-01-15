@@ -81,8 +81,9 @@ const { logger } = require('./logger')
 
   ipcMain.on('check-report-name', (event, name) => {
     db.report
-      .findOne({ where: { name: name }, raw: true })
-      .then(report => {
+      .findAll({raw: true })
+      .then(reports => {
+        const report = findStr(name, reports, 'name')
         event.sender.send('check-report-name-reply', !!report)
       })
       .catch(err => {
@@ -204,18 +205,18 @@ const { logger } = require('./logger')
   ipcMain.on('save-report', (event, report) => {
     let dbReport = {}
     const date = new Date().toLocaleString()
-    dbReport.name = report.name
-    dbReport.date_updated = date
-    dbReport.name = report.name
-    let where = { name: report.name }
-    db.report.findOne({
-      where: where
+    db.report.findAll().then(reports => {
+      return findStr(report.name, reports, 'name')
     }).then(newReport => {
       if(!newReport) {
         dbReport.date_created = date
-        return db.report.create(dbReport)
+        return db.report.create({
+          name: report.name,
+          date_updated: date
+        })
       } else {
         newReport.date_updated = date
+        newReport.name = report.name
         newReport.save()
         return newReport
       }
