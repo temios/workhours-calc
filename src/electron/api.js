@@ -203,39 +203,46 @@ const { logger } = require('./logger')
 
   ipcMain.on('save-report', (event, report) => {
     let dbReport = {}
+    const date = new Date().toLocaleString()
+    dbReport.name = report.name
+    dbReport.date_updated = date
     dbReport.name = report.name
     let where = { name: report.name }
-    db.report
-      .findOrCreate({
-        where: where
+    db.report.findOne({
+      where: where
+    }).then(newReport => {
+      if(!newReport) {
+        dbReport.date_created = date
+        return db.report.create(dbReport)
+      } else {
+        newReport.date_updated = date
+        newReport.save()
+        return newReport
+      }
+    }).then(newReport => {
+      let currentReport = newReport.get({ plain: true })
+      db.reportPart.destroy(
+        { where: { id_report: currentReport.id } }
+      ).then(() => {
+        report.items.forEach(item => {
+          let dbReportPart = {
+            id_report: currentReport.id,
+            id_part: item.part.id,
+            count: item.count
+          }
+          db.reportPart.create(dbReportPart)
+        })
       })
-      .then(newReport => {
-        // TODO: fix date bug
-        let currentReport = newReport[0].get({ plain: true })
-        db.reportPart
-          .destroy({ where: { id_report: currentReport.id } })
-          .then(() => {
-            report.items.forEach(item => {
-              let dbReportPart = {
-                id_report: currentReport.id,
-                id_part: item.part.id,
-                count: item.count
-              }
-              db.reportPart.create(dbReportPart)
-            })
-          })
-        return currentReport
-      })
-      .then(newReport => {
-        event.sender.send('save-report-reply', newReport)
-      })
-      .catch(err => {
-        event.sender.send(
-          'error',
-          'Произошла ошибка во время выборки категорий.'
-        )
-        logger.error(err.message)
-      })
+      return currentReport
+    }).then(newReport => {
+      event.sender.send('save-report-reply', newReport)
+    }).catch(err => {
+      event.sender.send(
+        'error',
+        'Произошла ошибка во время выборки категорий.'
+      )
+      logger.error(err.message)
+    })
   })
 
   ipcMain.on('generate-pdf', (event, report) => {

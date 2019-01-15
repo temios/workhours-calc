@@ -45,7 +45,7 @@ class ArchiveContent extends React.Component {
                 <tr key={report.id}>
                   <td className='font-weight-bold'>{report.id}</td>
                   <td>{report.name}</td>
-                  <td>{report.date_updated}</td>
+                  <td>{new Date(report.date_updated).toLocaleDateString()}</td>
                   <td><Button color={'success'} data-id={report.id} onClick={this.loadReport}>Загрузить</Button></td>
                 </tr>
               )
