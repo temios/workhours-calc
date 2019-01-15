@@ -70,7 +70,7 @@ const { logger } = require('./logger')
         })
         event.sender.send('get-report-parts-reply', response)
       })
-      .catch((err) => {
+      .catch(err => {
         event.sender.send(
           'error',
           'Произошла ошибка во время выборки сборок для отчёта.'
@@ -85,7 +85,7 @@ const { logger } = require('./logger')
       .then(report => {
         event.sender.send('check-report-name-reply', !!report)
       })
-      .catch((err) => {
+      .catch(err => {
         event.sender.send(
           'error',
           'Произошла ошибка во время проверки имени отчёта.'
@@ -227,7 +227,7 @@ const { logger } = require('./logger')
       .then(newReport => {
         event.sender.send('save-report-reply', newReport)
       })
-      .catch((err) => {
+      .catch(err => {
         event.sender.send(
           'error',
           'Произошла ошибка во время выборки категорий.'
@@ -249,32 +249,38 @@ const { logger } = require('./logger')
           ]
         },
         savePath => {
-          let content = [{ text: 'Отчёт: ' + report.name }]
+          let content = [
+            { text: 'Наименование изделия: ' + report.name, bold: true, fontSize: 15, margin: [0, 10] },
+            { text: 'Количество сборок:' + report.items.length, bold: true, fontSize: 15, margin: [0, 10] }
+          ]
           let body = [
             [
-              { text: 'Нaименование' },
-              { text: 'Кол-во сборок' },
-              { text: 'Кол-во часов' },
+              { text: '#' },
+              { text: 'Трудоемкость' },
+              { text: 'Нaименование сборки' },
+              { text: 'Кол-во' },
               { text: 'Сумма часов' }
             ]
           ]
-          report.items.forEach(item => {
+          report.items.forEach((item, i) => {
             let row = [
+              ++i,
+              item.part.hour + ' ч/ч',
               item.part.name,
-              item.count,
-              item.part.hour,
-              item.count * item.part.hour
+              item.count + ' шт.',
+              (item.count * item.part.hour) + ' ч/ч'
             ]
             body.push(row)
           })
           let table = {
             table: {
               headerRows: 1,
+              widths: ['auto', 'auto', '*', 'auto', 'auto'],
               body: body
             }
           }
           content.push(table)
-          content.push({ text: 'Итого: ' + report.sum })
+          content.push({ text: 'Итого: ' + report.sum + ' ч/ч', bold: true, fontSize: 15, margin: [0, 10] })
           let fontsPath = path.resolve(__dirname, '../../public/fonts')
           let fonts = {
             Roboto: {
