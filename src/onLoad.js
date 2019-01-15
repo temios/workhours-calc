@@ -16,7 +16,6 @@ export const onLoad = store => {
     if (categories !== undefined && categories.length > 0) {
       let currentCat = categories[0]
       api.getParts(currentCat.id).then((parts) => {
-        console.log(parts)
         store.dispatch(reloadParts(currentCat.id, parts))
       })
     }

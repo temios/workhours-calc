@@ -100,17 +100,20 @@ const { logger } = require('./logger')
       hour: part.hour
     }
     db.part
-      .findOne({ where: { name: part.name } })
-      .then(part => {
+      .findAll({ raw: true })
+      .then(parts => {
         return new Promise((resolve, reject) => {
-          if (!part) {
+          const existPart = findStr(part.name, parts, 'name')
+          if (!existPart) {
             return resolve()
           }
           reject(new Error('Сборка с таким именем уже существует.'))
         })
       })
       .then(() => {
-        return db.category.findOne({ where: { name: part.category } })
+        return db.category.findAll({ raw: true })
+      }).then((categories) => {
+        return findStr(part.category, categories, 'name')
       })
       .then(category => {
         return new Promise(resolve => {
@@ -151,20 +154,19 @@ const { logger } = require('./logger')
         where: { id: part.id },
         raw: true
       })
-      const existPart = await db.part.findOne({
-        where: { name: part.name, id: { [db.Op.ne]: dbPart.id } },
+      const parts = await db.part.findAll({
+        where: { id: { [db.Op.ne]: dbPart.id } },
         raw: true
       })
+      const existPart = findStr(part.name, parts, 'name')
       if (existPart) {
         return event.sender.send(
           'error',
           'Cуществует другая сборка с таким именем'
         )
       }
-      let dbCategory = await db.category.findOne({
-        where: { name: part.category },
-        raw: true
-      })
+      const categories = await db.category.findAll({ raw: true })
+      let dbCategory = findStr(part.category, categories, 'name')
       if (!dbCategory) {
         dbCategory = await db.category
           .create({ name: part.name })
@@ -302,4 +304,11 @@ const { logger } = require('./logger')
       logger.error(err.message)
     }
   })
+
+  function findStr (needle, arr, field) {
+    const modifyNeedle = needle.toLowerCase().trim()
+    return arr.find(item => {
+      return item[field].toLowerCase().trim() === modifyNeedle
+    })
+  }
 })()

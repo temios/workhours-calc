@@ -1,4 +1,26 @@
 .part-picture {
-    max-height: 320px;
-    max-width: 240px;
+    max-height: 180px;
+    max-width: 320px;
+}
+
+.report-clear-button{
+   width: 100%;
+}
+
+.report-sum{
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: 1em 0;
+}
+
+.plus-button{
+    padding: 0.2em 0.6em;
+}
+
+.minus-button{
+    padding: 0.2em 0.7em;
+}
+
+.part-count{
+    padding: 0.5em;
 }

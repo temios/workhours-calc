@@ -24,7 +24,6 @@ const mapDispatchToProps = (dispatch) => ({
       if (!result || allowRewrite) {
         api.saveReport(props).then(report => {
           dispatch(addReportToArchive(report))
-          dispatch(clearReport())
           dispatch(allowRewriteDialog(false))
           dispatch(
             showAlert({ text: 'Отчет добавлен в архив.', color: 'success' })

@@ -1,13 +1,8 @@
 import * as React from 'react'
-import {
-  Navbar,
-  NavbarToggler,
-  Nav,
-  NavItem,
-  NavLink
-} from 'reactstrap'
+import { Navbar, NavbarToggler, Nav, NavItem, NavLink } from 'reactstrap'
 import Collapse from 'reactstrap/lib/Collapse'
 import Link from 'react-router-dom/Link'
+import './MenuContainer.css'
 
 class MenuContainer extends React.Component {
   constructor (props) {
@@ -29,19 +24,50 @@ class MenuContainer extends React.Component {
       <div>
         <Navbar color='dark' dark expand='md'>
           <NavbarToggler onClick={this.toggle} />
-          <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav navbar className='mr-auto'>
+          <Collapse
+            isOpen={this.state.isOpen}
+            navbar
+            className='justify-content-center'
+          >
+            <Nav navbar>
               <NavItem>
-                <NavLink tag={Link} to='/report'>Текущий отчёт</NavLink>
+                <NavLink
+                  tag={Link}
+                  to='/report'
+                  active={
+                    window.location.pathname === '/report' ||
+                    window.location.pathname === '/'
+                  }
+                >
+                  Текущий отчёт
+                </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to='/choice'>Каталог сборок</NavLink>
+                <NavLink
+                  tag={Link}
+                  to='/choice'
+                  active={window.location.pathname === '/choice'}
+                >
+                  Каталог сборок
+                </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to='/part'>Новая сборка</NavLink>
+                <NavLink
+                  tag={Link}
+                  to='/part'
+                  active={window.location.pathname === '/part'}
+                >
+                  Новая сборка
+                </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to='/archive'>Архив отчётов</NavLink>
+                <NavLink
+                  tag={Link}
+                  to='/archive'
+                  active={window.location.pathname === '/archive'}
+                >
+                  Архив отчётов
+                </NavLink>
               </NavItem>
             </Nav>
           </Collapse>
