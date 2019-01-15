@@ -27,13 +27,11 @@ const catalogReducer = (state = initState, action) => {
       }
     }
     case EDIT_PART: {
-      console.log(state)
       const category = state.categories.filter(cat => {
         return cat.id === state.currentCategory
       })[0]
       let editPart = action.editPart
       editPart.category = category.name
-      console.log(editPart)
       return {
         ...state,
         editPart: editPart

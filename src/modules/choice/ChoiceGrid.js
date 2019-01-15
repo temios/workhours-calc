@@ -1,10 +1,13 @@
 import React from 'react'
 import {
   Button,
-  Col, FormFeedback,
+  Col,
+  FormFeedback,
   Input,
   Label,
-  Modal, ModalBody, ModalFooter,
+  Modal,
+  ModalBody,
+  ModalFooter,
   ModalHeader,
   Row,
   Table
@@ -24,7 +27,6 @@ class ChoiceGrid extends React.Component {
       modalError: false,
       modalErrorText: ''
     }
-    console.log(this.props.reportItems)
     this.reloadParts = this.reloadParts.bind(this)
     this.handleAdd = this.handleAdd.bind(this)
     this.toggle = this.toggle.bind(this)
@@ -47,7 +49,7 @@ class ChoiceGrid extends React.Component {
   }
 
   addPart () {
-    let alreadyAdded = this.props.reportItems.some((item) => {
+    let alreadyAdded = this.props.reportItems.some(item => {
       return item.part.id === this.state.partId
     })
     if (alreadyAdded) {
@@ -56,7 +58,7 @@ class ChoiceGrid extends React.Component {
       })
       this.toggleError()
     } else {
-      let part = this.props.parts.filter((part) => {
+      let part = this.props.parts.filter(part => {
         return part.id === this.state.partId
       })[0]
       this.props.addPartToReport({
@@ -69,7 +71,7 @@ class ChoiceGrid extends React.Component {
 
   editPart (event) {
     let partId = parseInt(event.target.dataset.id)
-    let part = this.props.parts.filter((part) => {
+    let part = this.props.parts.filter(part => {
       return part.id === partId
     })[0]
     this.props.editPart(part)
@@ -104,83 +106,114 @@ class ChoiceGrid extends React.Component {
     let categories = ''
     let parts
     if (this.props.categories) {
-      categories = <Row>
-        <Label for='category' sm={2}>Категория:</Label>
-        <Col sm={10}>
-          <Input type='select' name='category' id='category'
-                 value={this.props.currentCategory}
-                 onChange={this.reloadParts}>
-            {this.props.categories.map((category) =>
-              <option key={category.id}
-                      value={category.id}>{category.name}
-              </option>)}
-          </Input>
-        </Col>
-      </Row>
+      categories = (
+        <Row className='category-selector'>
+          <Label for='category' sm={2}>
+            Категория:
+          </Label>
+          <Col sm={10}>
+            <Input
+              type='select'
+              name='category'
+              id='category'
+              value={this.props.currentCategory}
+              onChange={this.reloadParts}
+            >
+              {this.props.categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </Input>
+          </Col>
+        </Row>
+      )
     }
     if (this.props.parts && this.props.parts.length > 0) {
-      parts = this.props.parts.map((part) =>
+      parts = this.props.parts.map(part => (
         <tr key={part.id}>
           <th scope='row'>{part.id}</th>
           <td>{part.hour}</td>
           <td>
-            <img src={'images/' + part.picture} className='partImage' alt=''/>
+            <img
+              src={'images/' + part.picture}
+              className='catalog-part-picture'
+              alt=''
+            />
           </td>
           <td>{part.name}</td>
-          <td><Button color='warning'
-                      onClick={this.editPart}
-                      data-id={part.id}>Редактировать</Button></td>
-          <td><Button color='success' data-id={part.id}
-                      onClick={this.handleAdd}>Добавить</Button></td>
+          <td>
+            <Button color='warning' onClick={this.editPart} data-id={part.id}>
+              Редактировать
+            </Button>
+          </td>
+          <td>
+            <Button color='success' data-id={part.id} onClick={this.handleAdd}>
+              Добавить
+            </Button>
+          </td>
+        </tr>
+      ))
+    } else {
+      parts = (
+        <tr>
+          <td>Нет деталей в выбранной категории</td>
         </tr>
       )
-    } else {
-      parts = <tr>
-        <td>Нет деталей в выбранной категории</td>
-      </tr>
     }
     if (this.state.toEdit) {
-      return <Redirect to='/edit' push/>
+      return <Redirect to='/edit' push />
     }
     return (
       <React.Fragment>
         {categories}
-        <Table>
+        <Table className='text-center table-bordered'>
           <thead>
-          <tr>
-            <th>#</th>
-            <th>Ч/Часы</th>
-            <th>Картинка</th>
-            <th>Название</th>
-            <th>Редактирование</th>
-            <th>Добавление</th>
-          </tr>
+            <tr>
+              <th>#</th>
+              <th>Ч/Часы</th>
+              <th>Картинка</th>
+              <th>Название</th>
+              <th>Редактирование</th>
+              <th>Добавление</th>
+            </tr>
           </thead>
-          <tbody>
-          {parts}
-          </tbody>
+          <tbody>{parts}</tbody>
         </Table>
-        <Modal isOpen={this.state.modal} toggle={this.toggle}
-               className={this.props.className}>
+        <Modal
+          isOpen={this.state.modal}
+          toggle={this.toggle}
+          className={this.props.className}
+        >
           <ModalHeader>Количество</ModalHeader>
           <ModalBody>
-            <Input type='text' onChange={this.changeCount}
-                   invalid={this.state.error !== ''}/>
+            <Input
+              type='text'
+              onChange={this.changeCount}
+              invalid={this.state.error !== ''}
+            />
             <FormFeedback>{this.state.error}</FormFeedback>
           </ModalBody>
           <ModalFooter>
-            <Button color='secondary' onClick={this.toggle}>Отмена</Button>
-            <Button color='success' onClick={this.addPart}
-                    disabled={this.state.error !== ''}>Добавить</Button>
+            <Button color='secondary' onClick={this.toggle}>
+              Отмена
+            </Button>
+            <Button
+              color='success'
+              onClick={this.addPart}
+              disabled={this.state.error !== ''}
+            >
+              Добавить
+            </Button>
           </ModalFooter>
         </Modal>
         <Modal isOpen={this.state.modalError} toggle={this.toggleError}>
           <ModalHeader>Ошибка</ModalHeader>
-          <ModalBody>
-            {this.state.modalErrorText}
-          </ModalBody>
+          <ModalBody>{this.state.modalErrorText}</ModalBody>
           <ModalFooter>
-            <Button color='success' onClick={this.toggleError}>Ок</Button>
+            <Button color='success' onClick={this.toggleError}>
+              Ок
+            </Button>
           </ModalFooter>
         </Modal>
       </React.Fragment>

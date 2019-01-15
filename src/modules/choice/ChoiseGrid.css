@@ -1,4 +1,8 @@
-.partImage {
-    max-height: 320px;
-    max-width: 240px;
+.catalog-part-picture {
+    max-height: 180px;
+    max-width: 320px;
+}
+
+.category-selector{
+    padding-bottom: 1em;
 }

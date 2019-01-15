@@ -10,7 +10,6 @@ export default class CustomAlert extends React.Component {
   }
 
   render () {
-    console.log(this.props)
     return (
       <Row>
         <Col md={12}>

@@ -3,7 +3,6 @@ const { app, BrowserWindow } = require('electron')
 
 const path = require('path')
 const isDev = require('electron-is-dev')
-const { db } = require('../src/electron/db')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -31,15 +30,6 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
-
-  db
-    .authenticate()
-    .then(() => {
-      console.log('Connection has been established successfully.')
-    })
-    .catch(err => {
-      console.error('Unable to connect to the database:', err)
-    })
 }
 
 // This method will be called when Electron has finished

@@ -15,6 +15,7 @@ export const LOAD_ARCHIVE = 'LOAD_ARCHIVE'
 export const ALLOW_REWRITE_DIALOG = 'ALLOW_REWRITE_DIALOG'
 export const SHOW_ALERT = 'SHOW_ALERT'
 export const CLOSE_ALERT = 'CLOSE_ALERT'
+export const REDIRECT_FROM_PART = 'REDIRECT_FROM_PART'
 
 export const loadCategories = categories => ({
   type: LOAD_CATEGORIES,
@@ -87,7 +88,7 @@ export const loadArchive = reports => ({
   reports
 })
 
-export  const allowRewriteDialog = (open) => ({
+export const allowRewriteDialog = (open) => ({
   type: ALLOW_REWRITE_DIALOG,
   open
 })
@@ -100,4 +101,9 @@ export const showAlert = (alert) => ({
 
 export const closeAlert = () => ({
   type: CLOSE_ALERT
+})
+
+export const redirectFromPart = (to) => ({
+  type: REDIRECT_FROM_PART,
+  to
 })

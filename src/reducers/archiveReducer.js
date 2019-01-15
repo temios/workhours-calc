@@ -15,7 +15,6 @@ const archiveReducer = (state = initState, action) => {
       })
       newReports.push(newReport)
       newReports = sortArchive(newReports)
-      console.log(newReports)
       return { ...state, reports: newReports }
     case LOAD_ARCHIVE:
       newReports = sortArchive(action.reports)

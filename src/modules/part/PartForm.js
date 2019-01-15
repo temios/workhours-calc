@@ -1,12 +1,17 @@
 import * as React from 'react'
 import {
   Button,
-  Col, DropdownItem,
-  DropdownMenu, DropdownToggle,
+  Col,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
   Form,
   FormGroup,
-  Input, InputGroup, InputGroupButtonDropdown,
-  Label, Row
+  Input,
+  InputGroup,
+  InputGroupButtonDropdown,
+  Label,
+  Row
 } from 'reactstrap'
 import { Redirect } from 'react-router-dom'
 import './PartForm.css'
@@ -52,42 +57,59 @@ class PartForm extends React.Component {
 
   handleUserInput (e) {
     const name = e.target.name
-    const value = e.target.value
+    let value = e.target.value
     let state = this.state
     if (name === 'picture') {
       if (e.target.files.length === 0) return
-      state.part[name] = e.target.files[0].path
+      value = e.target.files[0].path
       state.previewURL = URL.createObjectURL(e.target.files[0])
-    } else {
-      state.part[name] = value
     }
-    this.setState({
-      state: state
-    },
-    () => { this.validateField(name, value) })
+    state.part[name] = value
+    this.setState(
+      {
+        state: state
+      },
+      () => {
+        this.validateField(name, value)
+      }
+    )
   }
 
   validateField (fieldName, value) {
     let inputErrors = this.state.inputErrors
     let inputValids = this.state.inputValids
     let inputTouched = this.state.inputTouched
-
-    inputValids[fieldName] = value.length > 0
-    inputErrors[fieldName] = value.length > 0 ? '' : 'Обязательное поле'
-    inputTouched[fieldName] = true
-    this.setState({
-      inputValids: inputValids,
-      inputErrors: inputErrors,
-      inputTouched: inputTouched
-    }, this.validateForm)
+    if (fieldName === 'hour') {
+      const hour = Number.parseInt(value)
+      inputValids[fieldName] = !isNaN(hour)
+      inputErrors[fieldName] = !isNaN(hour) ? '' : 'Значение должно быть целым числом'
+      inputTouched[fieldName] = true
+    } else {
+      inputValids[fieldName] = value.length > 0
+      inputErrors[fieldName] = value.length > 0 ? '' : 'Обязательное поле'
+      inputTouched[fieldName] = true
+    }
+    this.setState(
+      {
+        inputValids: inputValids,
+        inputErrors: inputErrors,
+        inputTouched: inputTouched
+      },
+      this.validateForm
+    )
   }
 
   chooseCategory (event) {
     let state = this.state
     state.part.category = event.target.innerHTML
-    this.setState({
-      state: state
-    }, () => { this.validateField('category', state.part.category) })
+    this.setState(
+      {
+        state: state
+      },
+      () => {
+        this.validateField('category', state.part.category)
+      }
+    )
   }
 
   validateForm () {
@@ -106,78 +128,122 @@ class PartForm extends React.Component {
 
   render () {
     let categories = ''
-    const redirect = this.state.redirect
-    if (redirect) {
-      return <Redirect to='/choice' push /> // TODO: redux browser history?
+    if (this.state.redirect) {
+      return <Redirect to='/choice' push />
     }
     if (this.props.categories) {
-      categories = <InputGroupButtonDropdown addonType='append'
-        isOpen={this.state.dropdownOpen}
-        toggle={this.toggleDropDown}>
-        <DropdownToggle caret />
-        <DropdownMenu>
-          {this.props.categories.map((category) => {
-            return <DropdownItem key={category.id}
-              onClick={this.chooseCategory}>{category.name}</DropdownItem>
-          })}
-        </DropdownMenu>
-      </InputGroupButtonDropdown>
+      categories = (
+        <InputGroupButtonDropdown
+          addonType='append'
+          isOpen={this.state.dropdownOpen}
+          toggle={this.toggleDropDown}
+        >
+          <DropdownToggle className={'part-category-button'} caret>
+            Выбор категории&nbsp;
+          </DropdownToggle>
+          <DropdownMenu>
+            {this.props.categories.map(category => {
+              return (
+                <DropdownItem key={category.id} onClick={this.chooseCategory}>
+                  {category.name}
+                </DropdownItem>
+              )
+            })}
+          </DropdownMenu>
+        </InputGroupButtonDropdown>
+      )
     }
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.handleSubmit} className='part-form'>
         <FormGroup row>
-          <Label for='category' md={2}>Категория</Label>
-          <Col md={10}>
+          <Label for='category' md={2}>
+            Категория
+          </Label>
+          <Col md={8}>
             <InputGroup>
-              <Input type='text' name='category'
+              <Input
+                type='text'
+                name='category'
                 id='category' // TODO вынести в компонент
                 value={this.state.part.category}
-                invalid={!this.state.inputValids.category &&
-                     this.state.inputTouched.category}
-                onChange={this.handleUserInput} />
+                invalid={
+                  !this.state.inputValids.category &&
+                  this.state.inputTouched.category
+                }
+                onChange={this.handleUserInput}
+              />
               {this.props.categories && categories}
             </InputGroup>
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Label for='partName' md={2}>Наименование</Label>
-          <Col md={10}>
-            <Input type='text' name='name' id='name'
+          <Label for='partName' md={2}>
+            Наименование
+          </Label>
+          <Col md={8}>
+            <Input
+              type='text'
+              name='name'
+              id='name'
               defaultValue={this.state.part.name}
-              invalid={!this.state.inputValids.name &&
-                   this.state.inputTouched.name}
-              onChange={this.handleUserInput} />
+              invalid={
+                !this.state.inputValids.name && this.state.inputTouched.name
+              }
+              onChange={this.handleUserInput}
+            />
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Label for='hour' md={2}>Кол-во часов</Label>
-          <Col md={10}>
-            <Input type='text' name='hour' id='hour'
+          <Label for='hour' md={2}>
+            Кол-во часов
+          </Label>
+          <Col md={8}>
+            <Input
+              type='text'
+              name='hour'
+              id='hour'
               defaultValue={this.state.part.hour}
-              invalid={!this.state.inputValids.hour &&
-                   this.state.inputTouched.hour}
-              onChange={this.handleUserInput} />
+              invalid={
+                !this.state.inputValids.hour && this.state.inputTouched.hour
+              }
+              onChange={this.handleUserInput}
+            />
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Label for='picture' md={2}>Картинка</Label>
-          <Col md={10}>
-            <Input type='file' name='picture' id='picture'
+          <Label for='picture' md={2}>
+            Картинка
+          </Label>
+          <Col md={8}>
+            <Input
+              type='file'
+              name='picture'
+              id='picture'
               accept='.png,.jpeg,.jpg'
-              invalid={!this.state.inputValids.picture &&
-                   this.state.inputTouched.picture}
-              onChange={this.handleUserInput} />
+              invalid={
+                !this.state.inputValids.picture &&
+                this.state.inputTouched.picture
+              }
+              onChange={this.handleUserInput}
+            />
           </Col>
         </FormGroup>
         <Row>
-          <Col md={10}>
+          <Col md={12}>
             <img src={this.state.previewURL} id={'part-picture'} alt='' />
           </Col>
         </Row>
-        <Button color='success'
-          disabled={!this.state.formValid}>{this.props.isEdit
-            ? 'Сохранить'
-            : 'Добавить'}</Button>
+        <Row>
+          <Col md={{ size: 2, offset: 8 }}>
+            <Button
+              color='success'
+              disabled={!this.state.formValid}
+              className='part-button'
+            >
+              {this.props.isEdit ? 'Сохранить' : 'Добавить'}
+            </Button>
+          </Col>
+        </Row>
       </Form>
     )
   }

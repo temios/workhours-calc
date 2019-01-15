@@ -1,3 +1,13 @@
 #part-picture{
     padding: 2rem;
+    width: 960px;
+    height: 540px;
+}
+
+.part-button{
+    width: 100%;
+}
+
+.part-category-button{
+    width: 200px;
 }
