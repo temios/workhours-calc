@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PartForm from './PartForm'
-import { reloadParts, showAlert } from '../../actions'
+import { redirectFromPart, reloadParts, showAlert } from '../../actions'
 import api from '../../services/ipc'
 
 const mapDispatchToProps = dispatch => ({
@@ -12,6 +12,8 @@ const mapDispatchToProps = dispatch => ({
       api.getParts(response.id_category).then(parts => {
         dispatch(reloadParts(response.id_category, parts))
       })
+      dispatch(redirectFromPart(true))
+      setTimeout(() => dispatch(redirectFromPart(false)), 500)
     })
   }
 })
@@ -20,7 +22,8 @@ function mapStateToProps (state) {
   return {
     categories: state.catalogReducer.categories,
     part: state.catalogReducer.editPart,
-    isEdit: true
+    isEdit: true,
+    redirect: state.partReducer.redirect
   }
 }
 

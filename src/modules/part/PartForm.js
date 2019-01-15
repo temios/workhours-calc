@@ -43,7 +43,6 @@ class PartForm extends React.Component {
         picture: false
       },
       formValid: this.props.isEdit,
-      redirect: Object.keys(this.props.part).length === 0,
       previewURL: this.props.isEdit ? 'images/' + this.props.part.picture : '',
       isEdit: this.props.isEdit
     }
@@ -128,7 +127,7 @@ class PartForm extends React.Component {
 
   render () {
     let categories = ''
-    if (this.state.redirect) {
+    if (this.props.redirect) {
       return <Redirect to='/choice' push />
     }
     if (this.props.categories) {

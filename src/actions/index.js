@@ -5,7 +5,6 @@ export const REMOVE_PART_FROM_REPORT = 'REMOVE_PART_FROM_REPORT'
 export const CLEAR_REPORT = 'CLEAR_REPORT'
 export const RELOAD_PARTS = 'RELOAD_PARTS'
 export const EDIT_PART = 'EDIT'
-export const UPDATE_PART = 'UPDATE_PART'
 export const ADD_REPORT_TO_ARCHIVE = 'ADD_REPORT_TO_ARCHIVE'
 export const INCREMENT_PART_COUNT = 'INCREMENT_PART_COUNT'
 export const DECREMENT_PART_COUNT = 'DECREMENT_PART_COUNT'
@@ -25,11 +24,6 @@ export const loadCategories = categories => ({
 export const addCategory = category => ({
   type: ADD_CATEGORY,
   category
-})
-
-export const updatePart = part => ({
-  type: UPDATE_PART,
-  part
 })
 
 export const addPartToReport = item => ({
@@ -103,7 +97,7 @@ export const closeAlert = () => ({
   type: CLOSE_ALERT
 })
 
-export const redirectFromPart = (to) => ({
+export const redirectFromPart = (flag) => ({
   type: REDIRECT_FROM_PART,
-  to
+  flag
 })

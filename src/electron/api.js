@@ -118,7 +118,7 @@ const { logger } = require('./logger')
       .then(category => {
         return new Promise(resolve => {
           if (!category) {
-            db.category.create({ name: part.name }).then(data => {
+            db.category.create({ name: part.category }).then(data => {
               let category = data.get({ plain: true })
               event.sender.send('add-category-reply', category)
               resolve(data)
@@ -169,7 +169,7 @@ const { logger } = require('./logger')
       let dbCategory = findStr(part.category, categories, 'name')
       if (!dbCategory) {
         dbCategory = await db.category
-          .create({ name: part.name })
+          .create({ name: part.category })
           .then(category => {
             return Promise.resolve(category.get({ plain: true }))
           })
