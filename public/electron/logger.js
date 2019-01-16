@@ -1,7 +1,13 @@
 const log4js = require('log4js')
+const isDev = require('electron-is-dev')
 const path = require('path')
+const { dirPath } = require('./helper')
+
+const fileName = 'application.log'
+const pathToFile = isDev ? fileName : path.join(dirPath, fileName)
+
 log4js.configure({
-  appenders: { app: { type: 'file', filename: path.join(__dirname, 'application.log') } },
+  appenders: { app: { type: 'file', filename: pathToFile } },
   categories: { default: { appenders: ['app'], level: 'debug' } }
 })
 

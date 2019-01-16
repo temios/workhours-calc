@@ -15,6 +15,7 @@ import {
 } from 'reactstrap'
 import { Redirect } from 'react-router-dom'
 import './PartForm.css'
+import pictureService from '../../services/pictureService'
 
 class PartForm extends React.Component {
   constructor (props) {
@@ -43,7 +44,8 @@ class PartForm extends React.Component {
         picture: false
       },
       formValid: this.props.isEdit,
-      previewURL: this.props.isEdit ? 'images/' + this.props.part.picture : '',
+      previewURL: this.props.isEdit
+        ? pictureService.getPath() + this.props.part.picture : '',
       isEdit: this.props.isEdit
     }
   }

@@ -5,9 +5,15 @@ const path = require('path')
 const fs = require('fs')
 const PdfPrinter = require('pdfmake')
 const { logger } = require('./logger')
+const isDev = require('electron-is-dev')
+const { dirPublicPath } = require('./helper')
 
 ;(function startListen () {
   logger.info('start app')
+  let picturePath = path.join(isDev ? 'public' : dirPublicPath, 'images')
+  let fontsPath = path.resolve(
+    isDev ? path.resolve(__dirname, '..') : dirPublicPath, 'fonts'
+  )
   ipcMain.on('get-categories', event => {
     db.category
       .findAll({ raw: true })
@@ -82,7 +88,7 @@ const { logger } = require('./logger')
 
   ipcMain.on('check-report-name', (event, name) => {
     db.report
-      .findAll({raw: true })
+      .findAll({ raw: true })
       .then(reports => {
         const report = findStr(name, reports, 'name')
         event.sender.send('check-report-name-reply', !!report)
@@ -133,7 +139,7 @@ const { logger } = require('./logger')
       .then(category => {
         let pictureName =
           randomstring.generate(32) + '.' + part.picture.split('.').pop()
-        let src = path.resolve('public/images/', pictureName)
+        let src = path.join(picturePath, pictureName)
         fs.copyFile(part.picture, src, err => {
           if (err) throw err
         })
@@ -180,7 +186,7 @@ const { logger } = require('./logger')
       if (part.picture !== dbPart.picture) {
         let pictureName =
           randomstring.generate(32) + '.' + part.picture.split('.').pop()
-        let src = path.resolve('public/images/', pictureName)
+        let src = path.join(picturePath, pictureName)
         fs.copyFile(part.picture, src, err => {
           if (err) throw err
         })
@@ -209,7 +215,7 @@ const { logger } = require('./logger')
     db.report.findAll().then(reports => {
       return findStr(report.name, reports, 'name')
     }).then(newReport => {
-      if(!newReport) {
+      if (!newReport) {
         dbReport.date_created = date
         return db.report.create({
           name: report.name,
@@ -261,8 +267,17 @@ const { logger } = require('./logger')
         },
         savePath => {
           let content = [
-            { text: 'Наименование изделия: ' + report.name, bold: true, fontSize: 15, margin: [0, 10] },
-            { text: 'Количество сборок:' + report.items.length, bold: true, fontSize: 15, margin: [0, 10] }
+            {
+              text: 'Наименование изделия: ' + report.name,
+              bold: true,
+              fontSize: 15,
+              margin: [0, 10]
+            },
+            { text: 'Количество сборок:' + report.items.length,
+              bold: true,
+              fontSize: 15,
+              margin: [0, 10]
+            }
           ]
           let body = [
             [
@@ -292,7 +307,6 @@ const { logger } = require('./logger')
           }
           content.push(table)
           content.push({ text: 'Итого: ' + report.sum + ' ч/ч', bold: true, fontSize: 15, margin: [0, 10] })
-          let fontsPath = path.resolve(__dirname, '../../public/fonts')
           let fonts = {
             Roboto: {
               normal: path.resolve(fontsPath, 'Roboto-Regular.ttf'),
