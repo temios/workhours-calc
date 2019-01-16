@@ -263,63 +263,72 @@ const { dirPublicPath } = require('./helper')
               name: 'Adobe PDF',
               extensions: ['pdf']
             }
-          ]
+          ],
+          defaultPath: report.name
         },
         savePath => {
-          let content = [
-            {
-              text: 'Наименование изделия: ' + report.name,
+          if (savePath) {
+            let content = [
+              {
+                text: 'Наименование изделия: ' + report.name,
+                bold: true,
+                fontSize: 15,
+                margin: [0, 10]
+              },
+              {
+                text: 'Количество сборок:' + report.items.length,
+                bold: true,
+                fontSize: 15,
+                margin: [0, 10]
+              }
+            ]
+            let body = [
+              [
+                { text: '#' },
+                { text: 'Трудоемкость' },
+                { text: 'Нaименование сборки' },
+                { text: 'Кол-во' },
+                { text: 'Сумма часов' }
+              ]
+            ]
+            report.items.forEach((item, i) => {
+              let row = [
+                ++i,
+                item.part.hour + ' ч/ч',
+                item.part.name,
+                item.count + ' шт.',
+                (item.count * item.part.hour) + ' ч/ч'
+              ]
+              body.push(row)
+            })
+            let table = {
+              table: {
+                headerRows: 1,
+                widths: ['auto', 'auto', '*', 'auto', 'auto'],
+                body: body
+              }
+            }
+            content.push(table)
+            content.push({
+              text: 'Итого: ' + report.sum + ' ч/ч',
               bold: true,
               fontSize: 15,
               margin: [0, 10]
-            },
-            { text: 'Количество сборок:' + report.items.length,
-              bold: true,
-              fontSize: 15,
-              margin: [0, 10]
+            })
+            let fonts = {
+              Roboto: {
+                normal: path.resolve(fontsPath, 'Roboto-Regular.ttf'),
+                bold: path.resolve(fontsPath, 'Roboto-Medium.ttf'),
+                italics: path.resolve(fontsPath, 'Roboto-Italic.ttf'),
+                bolditalics: path.resolve(fontsPath, 'Roboto-MediumItalic.ttf')
+              }
             }
-          ]
-          let body = [
-            [
-              { text: '#' },
-              { text: 'Трудоемкость' },
-              { text: 'Нaименование сборки' },
-              { text: 'Кол-во' },
-              { text: 'Сумма часов' }
-            ]
-          ]
-          report.items.forEach((item, i) => {
-            let row = [
-              ++i,
-              item.part.hour + ' ч/ч',
-              item.part.name,
-              item.count + ' шт.',
-              (item.count * item.part.hour) + ' ч/ч'
-            ]
-            body.push(row)
-          })
-          let table = {
-            table: {
-              headerRows: 1,
-              widths: ['auto', 'auto', '*', 'auto', 'auto'],
-              body: body
-            }
+            let printer = new PdfPrinter(fonts)
+            let pdf = printer.createPdfKitDocument({ content: content })
+            pdf.pipe(fs.createWriteStream(savePath))
+            pdf.end()
+            event.sender.send('generate-pdf-reply', true)
           }
-          content.push(table)
-          content.push({ text: 'Итого: ' + report.sum + ' ч/ч', bold: true, fontSize: 15, margin: [0, 10] })
-          let fonts = {
-            Roboto: {
-              normal: path.resolve(fontsPath, 'Roboto-Regular.ttf'),
-              bold: path.resolve(fontsPath, 'Roboto-Medium.ttf'),
-              italics: path.resolve(fontsPath, 'Roboto-Italic.ttf'),
-              bolditalics: path.resolve(fontsPath, 'Roboto-MediumItalic.ttf')
-            }
-          }
-          let printer = new PdfPrinter(fonts)
-          let pdf = printer.createPdfKitDocument({ content: content })
-          pdf.pipe(fs.createWriteStream(savePath))
-          pdf.end()
-          event.sender.send('generate-pdf-reply', true)
         }
       )
     } catch (err) {
