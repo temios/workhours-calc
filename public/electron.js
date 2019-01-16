@@ -21,7 +21,9 @@ function createWindow () {
   )
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  if (isDev) {
+    mainWindow.webContents.openDevTools()
+  }
   mainWindow.show()
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -56,4 +58,4 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-require('../src/electron/api')
+require('./electron/api')

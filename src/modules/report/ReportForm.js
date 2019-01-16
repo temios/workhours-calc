@@ -13,6 +13,7 @@ import {
   ModalFooter,
   Modal
 } from 'reactstrap'
+import pictureService from '../../services/pictureService'
 import './ReportForm.css'
 
 class ReportForm extends React.Component {
@@ -114,7 +115,6 @@ class ReportForm extends React.Component {
                       data-id={item.part.id}
                       onClick={this.decrementCount}
                       className='btn btn-default btn-number minus-button'
-                      data-type='minus'
                     >
                       -
                     </button>
@@ -123,7 +123,6 @@ class ReportForm extends React.Component {
                       onClick={this.incrementCount}
                       data-id={item.part.id}
                       className='btn btn-default btn-number plus-button'
-                      data-type='plus'
                     >
                       +
                     </button>
@@ -131,7 +130,7 @@ class ReportForm extends React.Component {
                   <td>{item.part.hour}</td>
                   <td>
                     <img
-                      src={'images/' + item.part.picture}
+                      src={pictureService.getPath() + item.part.picture}
                       alt={''}
                       className={'part-picture'}
                     />

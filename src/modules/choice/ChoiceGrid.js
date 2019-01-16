@@ -12,8 +12,9 @@ import {
   Row,
   Table
 } from 'reactstrap'
-import './ChoiseGrid.css'
 import { Redirect } from 'react-router-dom'
+import pictureService from '../../services/pictureService'
+import './ChoiseGrid.css'
 
 class ChoiceGrid extends React.Component {
   constructor (props) {
@@ -136,7 +137,7 @@ class ChoiceGrid extends React.Component {
           <td>{part.hour}</td>
           <td>
             <img
-              src={'images/' + part.picture}
+              src={pictureService.getPath() + part.picture}
               className='catalog-part-picture'
               alt=''
             />

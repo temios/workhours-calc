@@ -1,4 +1,12 @@
 const Sequelize = require('sequelize')
+const path = require('path')
+const isDev = require('electron-is-dev')
+const { dirPublicPath } = require('./helper')
+
+const fileName = 'work_hours.db'
+const pathToFile = path.join(
+  isDev ? './' : path.join(dirPublicPath, 'db'), fileName
+)
 
 const db = new Sequelize('database', 'username', 'password', {
   host: 'localhost',
@@ -10,7 +18,7 @@ const db = new Sequelize('database', 'username', 'password', {
     acquire: 30000,
     idle: 10000
   },
-  storage: './work_hours.db'
+  storage: pathToFile
 })
 
 db.category = db.import('./models/category')
