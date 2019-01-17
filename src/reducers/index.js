@@ -4,11 +4,13 @@ import catalogReducer from './catalogReducer'
 import archiveReducer from './archiveReducer'
 import alertReducer from './alertReducer'
 import partReducer from './partReducer'
+import modalPictureReducer from './modalPictureReducer'
 
 export default combineReducers({
   reportReducer,
   catalogReducer,
   archiveReducer,
   alertReducer,
-  partReducer
+  partReducer,
+  modalPictureReducer
 })

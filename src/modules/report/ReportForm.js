@@ -15,6 +15,7 @@ import {
 } from 'reactstrap'
 import pictureService from '../../services/pictureService'
 import './ReportForm.css'
+import ModalPictureContainer from '../../shared/components/ModalPictureContainer'
 
 class ReportForm extends React.Component {
   constructor (props) {
@@ -28,6 +29,7 @@ class ReportForm extends React.Component {
     this.allowRewrite = this.allowRewrite.bind(this)
     this.closeRewriteDialog = this.closeRewriteDialog.bind(this)
     this.savePdf = this.savePdf.bind(this)
+    this.showPicture = this.showPicture.bind(this)
   }
 
   removePart (e) {
@@ -85,6 +87,10 @@ class ReportForm extends React.Component {
     })
   }
 
+  showPicture (e) {
+    this.props.showPicture(e.target.src)
+  }
+
   render () {
     let content = 'Для добаление деталей перейдите к выбору.'
     let buttons = ''
@@ -133,6 +139,7 @@ class ReportForm extends React.Component {
                       src={pictureService.getPath() + item.part.picture}
                       alt={''}
                       className={'part-picture'}
+                      onClick={this.showPicture}
                     />
                   </td>
                   <td>{item.part.name}</td>
@@ -236,6 +243,7 @@ class ReportForm extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
+        <ModalPictureContainer />
       </React.Fragment>
     )
   }

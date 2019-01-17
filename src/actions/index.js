@@ -15,6 +15,8 @@ export const ALLOW_REWRITE_DIALOG = 'ALLOW_REWRITE_DIALOG'
 export const SHOW_ALERT = 'SHOW_ALERT'
 export const CLOSE_ALERT = 'CLOSE_ALERT'
 export const REDIRECT_FROM_PART = 'REDIRECT_FROM_PART'
+export const SHOW_PICTURE = 'SHOW_PICTURE'
+export const CLOSE_PICTURE = 'CLOSE_PICTURE'
 
 export const loadCategories = categories => ({
   type: LOAD_CATEGORIES,
@@ -100,4 +102,13 @@ export const closeAlert = () => ({
 export const redirectFromPart = (flag) => ({
   type: REDIRECT_FROM_PART,
   flag
+})
+
+export const showPicture = (picture) => ({
+  type: SHOW_PICTURE,
+  picture
+})
+
+export const closePicture = () => ({
+  type: CLOSE_PICTURE
 })
