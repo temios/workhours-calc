@@ -7,7 +7,8 @@ import {
   decrementPartCount,
   changeReportName,
   allowRewriteDialog,
-  showAlert
+  showAlert,
+  showPicture
 } from '../../actions'
 import ReportForm from './ReportForm'
 import api from '../../services/ipc'
@@ -52,6 +53,9 @@ const mapDispatchToProps = (dispatch) => ({
         showAlert({ text: 'Отчет сохранен в pdf.', color: 'success' })
       )
     })
+  },
+  showPicture: properties => {
+    dispatch(showPicture(properties))
   }
 })
 

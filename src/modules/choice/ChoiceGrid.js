@@ -15,6 +15,7 @@ import {
 import { Redirect } from 'react-router-dom'
 import pictureService from '../../services/pictureService'
 import './ChoiseGrid.css'
+import ModalPictureContainer from '../../shared/components/ModalPictureContainer'
 
 class ChoiceGrid extends React.Component {
   constructor (props) {
@@ -35,6 +36,7 @@ class ChoiceGrid extends React.Component {
     this.addPart = this.addPart.bind(this)
     this.changeCount = this.changeCount.bind(this)
     this.editPart = this.editPart.bind(this)
+    this.showPicture = this.showPicture.bind(this)
   }
 
   reloadParts (event) {
@@ -103,6 +105,10 @@ class ChoiceGrid extends React.Component {
     })
   }
 
+  showPicture (e) {
+    this.props.showPicture(e.target.src)
+  }
+
   render () {
     let categories = ''
     let parts
@@ -140,6 +146,7 @@ class ChoiceGrid extends React.Component {
               src={pictureService.getPath() + part.picture}
               className='catalog-part-picture'
               alt=''
+              onClick={this.showPicture}
             />
           </td>
           <td>{part.name}</td>
@@ -208,7 +215,7 @@ class ChoiceGrid extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
-        <Modal isOpen={this.state.modalError} toggle={this.toggleError}>
+        <Modal isOpen={this.state.modalError} toggle={this.toggleError} >
           <ModalHeader>Ошибка</ModalHeader>
           <ModalBody>{this.state.modalErrorText}</ModalBody>
           <ModalFooter>
@@ -217,6 +224,7 @@ class ChoiceGrid extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
+        <ModalPictureContainer />
       </React.Fragment>
     )
   }
