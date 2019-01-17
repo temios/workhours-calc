@@ -191,7 +191,7 @@ class ChoiceGrid extends React.Component {
         <Modal
           isOpen={this.state.modal}
           toggle={this.toggle}
-          className={this.props.className}
+          className='choice-modal'
         >
           <ModalHeader>Количество</ModalHeader>
           <ModalBody>
@@ -215,7 +215,11 @@ class ChoiceGrid extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
-        <Modal isOpen={this.state.modalError} toggle={this.toggleError} >
+        <Modal
+          isOpen={this.state.modalError}
+          toggle={this.toggleError}
+          className='choice-modal'
+        >
           <ModalHeader>Ошибка</ModalHeader>
           <ModalBody>{this.state.modalErrorText}</ModalBody>
           <ModalFooter>

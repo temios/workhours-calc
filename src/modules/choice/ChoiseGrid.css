@@ -6,3 +6,7 @@
 .category-selector{
     padding-bottom: 1em;
 }
+
+.choice-modal{
+    max-width: 30em;
+}
