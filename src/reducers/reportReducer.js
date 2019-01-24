@@ -79,7 +79,7 @@ const reportReducer = (state = initialState, action) => {
 
 function sumHour (items) {
   return items.reduce((sum, item) => {
-    return sum + (item.count * item.part.hour)
+    return parseFloat((sum + (item.count * item.part.hour)).toFixed(3))
   }, 0)
 }
 

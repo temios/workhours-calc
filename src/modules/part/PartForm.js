@@ -65,6 +65,10 @@ class PartForm extends React.Component {
       value = e.target.files[0].path
       state.previewURL = URL.createObjectURL(e.target.files[0])
     }
+    if (name === 'hour') {
+      value = Number.parseFloat(value)
+      value = !isNaN(value) ? value.toFixed(2) : null
+    }
     state.part[name] = value
     this.setState(
       {
@@ -81,9 +85,8 @@ class PartForm extends React.Component {
     let inputValids = this.state.inputValids
     let inputTouched = this.state.inputTouched
     if (fieldName === 'hour') {
-      const hour = Number.parseInt(value)
-      inputValids[fieldName] = !isNaN(hour)
-      inputErrors[fieldName] = !isNaN(hour) ? '' : 'Значение должно быть целым числом'
+      inputValids[fieldName] = !!value
+      inputErrors[fieldName] = value ? '' : 'Значение должно быть числом'
       inputTouched[fieldName] = true
     } else {
       inputValids[fieldName] = value.length > 0

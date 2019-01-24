@@ -297,7 +297,8 @@ const { dirPublicPath } = require('./helper')
                 item.part.hour + ' ч/ч',
                 item.part.name,
                 item.count + ' шт.',
-                (item.count * item.part.hour) + ' ч/ч'
+                Number.parseFloat((item.count * item.part.hour).toFixed(2)) +
+                  ' ч/ч'
               ]
               body.push(row)
             })
