@@ -2,6 +2,7 @@ import React from 'react'
 import Header from '../../shared/components/Header'
 import { Button, Table } from 'reactstrap'
 import { Redirect } from 'react-router-dom'
+import moment from 'moment'
 
 class ArchiveContent extends React.Component {
   constructor (props) {
@@ -45,8 +46,14 @@ class ArchiveContent extends React.Component {
                 <tr key={report.id}>
                   <td className='font-weight-bold'>{report.id}</td>
                   <td>{report.name}</td>
-                  <td>{new Date(report.date_updated).toLocaleDateString()}</td>
-                  <td><Button color={'success'} data-id={report.id} onClick={this.loadReport}>Загрузить</Button></td>
+                  <td>
+                    {moment(report.date_updated, 'DD.MM.YYYY HH:mm:ss')
+                    .format('DD.MM.YYYY')}
+                  </td>
+                  <td>
+                    <Button color={'success'} data-id={report.id}
+                            onClick={this.loadReport}>Загрузить</Button>
+                  </td>
                 </tr>
               )
             })}

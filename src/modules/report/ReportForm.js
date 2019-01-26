@@ -143,7 +143,9 @@ class ReportForm extends React.Component {
                     />
                   </td>
                   <td>{item.part.name}</td>
-                  <td>{item.count * item.part.hour}</td>
+                  <td>
+                    {parseFloat((item.count * item.part.hour).toFixed(3))}
+                  </td>
                   <td>
                     <Button
                       color={'danger'}

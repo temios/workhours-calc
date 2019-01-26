@@ -5,6 +5,7 @@ const path = require('path')
 const fs = require('fs')
 const PdfPrinter = require('pdfmake')
 const { logger } = require('./logger')
+const moment = require('moment')
 const isDev = require('electron-is-dev')
 const { dirPublicPath } = require('./helper')
 
@@ -211,7 +212,7 @@ const { dirPublicPath } = require('./helper')
 
   ipcMain.on('save-report', (event, report) => {
     let dbReport = {}
-    const date = new Date().toLocaleString()
+    const date = moment().format('DD.MM.YYYY HH:mm:ss')
     db.report.findAll().then(reports => {
       return findStr(report.name, reports, 'name')
     }).then(newReport => {
@@ -297,7 +298,8 @@ const { dirPublicPath } = require('./helper')
                 item.part.hour + ' ч/ч',
                 item.part.name,
                 item.count + ' шт.',
-                (item.count * item.part.hour) + ' ч/ч'
+                Number.parseFloat((item.count * item.part.hour).toFixed(2)) +
+                  ' ч/ч'
               ]
               body.push(row)
             })
