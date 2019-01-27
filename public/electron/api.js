@@ -297,7 +297,9 @@ const { dirPublicPath } = require('./helper')
                 margin: [0, 10]
               },
               {
-                text: 'Дата: ' + report.date_updated,
+                text: 'Дата: ' + 
+                  moment(report.date_updated, 'DD.MM.YYYY HH:mm:ss')
+                  .format('DD.MM.YYYY'),
                 bold: true,
                 fontSize: 15,
                 margin: [0, 10]
