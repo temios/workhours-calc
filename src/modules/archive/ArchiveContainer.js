@@ -1,6 +1,10 @@
 import { connect } from 'react-redux'
 import ArchiveContent from './ArchiveContent'
-import { addReportToArchive, loadReportFromArchive } from '../../actions'
+import {
+  addReportToArchive,
+  loadReportFromArchive,
+  showPicture
+} from '../../actions'
 import api from '../../services/ipc'
 
 const mapDispatchToProps = (dispatch) => ({
@@ -11,6 +15,9 @@ const mapDispatchToProps = (dispatch) => ({
     api.getReportParts(props).then(items => {
       dispatch(loadReportFromArchive(props, items))
     })
+  },
+  showPicture: properties => {
+    dispatch(showPicture(properties))
   }
 })
 

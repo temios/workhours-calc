@@ -17,6 +17,7 @@ export const CLOSE_ALERT = 'CLOSE_ALERT'
 export const REDIRECT_FROM_PART = 'REDIRECT_FROM_PART'
 export const SHOW_PICTURE = 'SHOW_PICTURE'
 export const CLOSE_PICTURE = 'CLOSE_PICTURE'
+export const SAVE_REPORT_PICTURE = 'SAVE_REPORT_PICTURE'
 
 export const loadCategories = categories => ({
   type: LOAD_CATEGORIES,
@@ -71,6 +72,11 @@ export const decrementPartCount = partId => ({
 export const changeReportName = reportName => ({
   type: CHANGE_REPORT_NAME,
   reportName
+})
+
+export const saveReportPicture = src => ({
+  type: SAVE_REPORT_PICTURE,
+  src
 })
 
 export const loadReportFromArchive = (report, items) => ({

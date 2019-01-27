@@ -8,7 +8,7 @@ import {
   changeReportName,
   allowRewriteDialog,
   showAlert,
-  showPicture
+  showPicture, saveReportPicture, loadReportFromArchive
 } from '../../actions'
 import ReportForm from './ReportForm'
 import api from '../../services/ipc'
@@ -24,7 +24,9 @@ const mapDispatchToProps = (dispatch) => ({
     api.checkReportName(props.name).then(result => {
       if (!result || allowRewrite) {
         api.saveReport(props).then(report => {
+          console.log()
           dispatch(addReportToArchive(report))
+          dispatch(loadReportFromArchive(report, props.items))
           dispatch(allowRewriteDialog(false))
           dispatch(
             showAlert({ text: 'Отчет добавлен в архив.', color: 'success' })
@@ -47,6 +49,9 @@ const mapDispatchToProps = (dispatch) => ({
   changeReportName: (props) => {
     dispatch(changeReportName(props))
   },
+  saveReportPicture: (props) => {
+    dispatch(saveReportPicture(props))
+  },
   savePdf: (props) => {
     api.savePdf(props).then(() => {
       dispatch(
@@ -54,8 +59,8 @@ const mapDispatchToProps = (dispatch) => ({
       )
     })
   },
-  showPicture: properties => {
-    dispatch(showPicture(properties))
+  showPicture: props => {
+    dispatch(showPicture(props))
   }
 })
 
@@ -64,7 +69,8 @@ function mapStateToProps (state) {
     items: state.reportReducer.items,
     reportName: state.reportReducer.reportName,
     rewriteDialog: state.reportReducer.allowRewriteDialog,
-    sum: state.reportReducer.sum
+    sum: state.reportReducer.sum,
+    reportPicture: state.reportReducer.picture
   }
 }
 

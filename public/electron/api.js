@@ -212,19 +212,33 @@ const { dirPublicPath } = require('./helper')
 
   ipcMain.on('save-report', (event, report) => {
     let dbReport = {}
+    let savedPicture = ''
     const date = moment().format('DD.MM.YYYY HH:mm:ss')
     db.report.findAll().then(reports => {
       return findStr(report.name, reports, 'name')
+    }).then(newReport => {
+      if (!newReport || newReport.picture !== report.picture) { // TODO: Remove duplicate
+        let pictureName =
+          randomstring.generate(32) + '.' + report.picture.split('.').pop()
+        let src = path.join(picturePath, pictureName)
+        fs.copyFile(report.picture, src, err => {
+          if (err) throw err
+        })
+        savedPicture = pictureName
+      }
+      return newReport
     }).then(newReport => {
       if (!newReport) {
         dbReport.date_created = date
         return db.report.create({
           name: report.name,
-          date_updated: date
+          date_updated: date,
+          picture: savedPicture
         })
       } else {
         newReport.date_updated = date
         newReport.name = report.name
+        newReport.picture = savedPicture
         newReport.save()
         return newReport
       }
@@ -277,7 +291,13 @@ const { dirPublicPath } = require('./helper')
                 margin: [0, 10]
               },
               {
-                text: 'Количество сборок:' + report.items.length,
+                text: 'Количество сборок: ' + report.items.length,
+                bold: true,
+                fontSize: 15,
+                margin: [0, 10]
+              },
+              {
+                text: 'Дата: ' + report.date_updated,
                 bold: true,
                 fontSize: 15,
                 margin: [0, 10]

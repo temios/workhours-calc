@@ -3,6 +3,10 @@ import Header from '../../shared/components/Header'
 import { Button, Table } from 'reactstrap'
 import { Redirect } from 'react-router-dom'
 import moment from 'moment'
+import pictureService from '../../services/pictureService'
+import './ArchiveContent.css'
+import ModalPictureContainer
+  from '../../shared/components/ModalPictureContainer'
 
 class ArchiveContent extends React.Component {
   constructor (props) {
@@ -11,6 +15,7 @@ class ArchiveContent extends React.Component {
       redirect: false
     }
     this.loadReport = this.loadReport.bind(this)
+    this.showPicture = this.showPicture.bind(this)
   }
 
   loadReport (e) {
@@ -22,6 +27,10 @@ class ArchiveContent extends React.Component {
     this.setState({
       redirect: true
     })
+  }
+
+  showPicture (e) {
+    this.props.showPicture(e.target.src)
   }
 
   render () {
@@ -37,6 +46,7 @@ class ArchiveContent extends React.Component {
               <th>#</th>
               <th>Название</th>
               <th>Дата</th>
+              <th>Картинка</th>
               <th>Редактирование</th>
             </tr>
           </thead>
@@ -49,6 +59,14 @@ class ArchiveContent extends React.Component {
                   <td>
                     {moment(report.date_updated, 'DD.MM.YYYY HH:mm:ss')
                     .format('DD.MM.YYYY')}
+                  </td>
+                  <td>
+                    <img
+                      src={pictureService.getPath() + report.picture}
+                      className='report-picture'
+                      alt=''
+                      onClick={this.showPicture}
+                    />
                   </td>
                   <td>
                     <Button color={'success'} data-id={report.id}
@@ -64,6 +82,7 @@ class ArchiveContent extends React.Component {
       <React.Fragment>
         <Header header={'Архив отчётов'} />
         {reports}
+        <ModalPictureContainer />
       </React.Fragment>
     )
   }
