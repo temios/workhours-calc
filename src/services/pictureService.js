@@ -9,4 +9,10 @@ pictureService.getPath = () => {
   return imagesPath
 }
 
+pictureService.draftUrl = ''
+
+pictureService.resetDraftUrl = () => {
+  pictureService.draftUrl = ''
+}
+
 export default pictureService

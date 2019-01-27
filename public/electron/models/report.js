@@ -11,6 +11,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: false
     },
+    picture: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
     date_created: {
       type: DataTypes.INTEGER,
       allowNull: true,

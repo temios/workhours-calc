@@ -16,6 +16,7 @@ import {
 import pictureService from '../../services/pictureService'
 import './ReportForm.css'
 import ModalPictureContainer from '../../shared/components/ModalPictureContainer'
+import PictureInput from '../../shared/components/PictureInput'
 
 class ReportForm extends React.Component {
   constructor (props) {
@@ -59,7 +60,8 @@ class ReportForm extends React.Component {
     this.props.addReportToArchive(
       {
         items: this.props.items,
-        name: this.props.reportName
+        name: this.props.reportName,
+        picture: this.props.reportPicture
       },
       true
     )
@@ -69,7 +71,8 @@ class ReportForm extends React.Component {
     this.props.addReportToArchive(
       {
         items: this.props.items,
-        name: this.props.reportName
+        name: this.props.reportName,
+        picture: this.props.reportPicture
       },
       false
     )
@@ -96,6 +99,7 @@ class ReportForm extends React.Component {
     let buttons = ''
     let reportName = ''
     let sum = ''
+    let reportPicture = ''
     if (this.props.items && this.props.items.length > 0) {
       content = (
         <Table className='text-center table-bordered'>
@@ -165,7 +169,8 @@ class ReportForm extends React.Component {
         <Row>
           <Col md={{ size: 2, offset: 8 }}>
             <Button
-              color={'primary'}
+              outline
+              color={'info'}
               disabled={this.props.reportName === ''}
               onClick={this.savePdf}
             >
@@ -202,6 +207,16 @@ class ReportForm extends React.Component {
           </Col>
         </FormGroup>
       )
+      reportPicture = (
+        <PictureInput
+          handleImgClick={this.showPicture}
+          label={'Картинка отчёта'}
+          handleInput={this.props.saveReportPicture}
+          previewClass={'part-picture'}
+          invalid={false}
+          imageURL={this.props.reportPicture}
+        />
+      )
       sum = (
         <Row>
           <Col md={{ size: 2, offset: 10 }} className='report-sum float-right'>
@@ -227,6 +242,7 @@ class ReportForm extends React.Component {
           </Col>
         </Row>
         {reportName}
+        {reportPicture}
         {content}
         {sum}
         {buttons}

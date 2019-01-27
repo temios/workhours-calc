@@ -5,12 +5,13 @@ import {
   DECREMENT_PART_COUNT,
   INCREMENT_PART_COUNT,
   LOAD_REPORT_FROM_ARCHIVE,
-  REMOVE_PART_FROM_REPORT
+  REMOVE_PART_FROM_REPORT, SAVE_REPORT_PICTURE
 } from '../actions'
 
 let initialState = {
   items: [],
   reportName: '',
+  picture: '',
   allowRewriteDialog: false,
   sum: 0
 }
@@ -29,6 +30,7 @@ const reportReducer = (state = initialState, action) => {
         ...state,
         items: [],
         reportName: '',
+        picture: '',
         allowRewrite: false,
         allowRewriteDialog: false,
         sum: 0
@@ -62,13 +64,16 @@ const reportReducer = (state = initialState, action) => {
       return { ...state, items: items, sum: sum }
     case CHANGE_REPORT_NAME:
       return { ...state, reportName: action.reportName }
+    case SAVE_REPORT_PICTURE:
+      return { ...state, picture: action.src}
     case LOAD_REPORT_FROM_ARCHIVE:
       sum = sumHour(action.items)
       return {
         ...state,
         reportName: action.report.name,
         items: action.items,
-        sum: sum
+        sum: sum,
+        picture: action.report.picture
       }
     case ALLOW_REWRITE_DIALOG:
       return { ...state, allowRewriteDialog: action.open }
