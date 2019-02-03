@@ -86,7 +86,8 @@ class ReportForm extends React.Component {
     this.props.savePdf({
       items: this.props.items,
       name: this.props.reportName,
-      sum: this.props.sum
+      sum: this.props.sum,
+      date_updated: this.props.date_updated
     })
   }
 

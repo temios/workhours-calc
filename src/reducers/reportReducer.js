@@ -13,7 +13,8 @@ let initialState = {
   reportName: '',
   picture: '',
   allowRewriteDialog: false,
-  sum: 0
+  sum: 0,
+  date_updated: ''
 }
 
 const reportReducer = (state = initialState, action) => {
@@ -33,7 +34,8 @@ const reportReducer = (state = initialState, action) => {
         picture: '',
         allowRewrite: false,
         allowRewriteDialog: false,
-        sum: 0
+        sum: 0,
+        date_updated: ''
       }
     case REMOVE_PART_FROM_REPORT:
       targetId = action.partId
@@ -73,7 +75,8 @@ const reportReducer = (state = initialState, action) => {
         reportName: action.report.name,
         items: action.items,
         sum: sum,
-        picture: action.report.picture
+        picture: action.report.picture,
+        date_updated: action.report.date_updated
       }
     case ALLOW_REWRITE_DIALOG:
       return { ...state, allowRewriteDialog: action.open }

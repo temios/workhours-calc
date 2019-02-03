@@ -20,7 +20,6 @@ class PictureInput extends React.Component {
   }
 
   componentDidMount () {
-    pictureService.resetDraftUrl()
     this.rerenderPicture()
   }
 

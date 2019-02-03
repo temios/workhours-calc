@@ -6,6 +6,7 @@ import {
   showPicture
 } from '../../actions'
 import api from '../../services/ipc'
+import pictureService from '../../services/pictureService'
 
 const mapDispatchToProps = (dispatch) => ({
   addReportToArchive: (props) => {
@@ -13,6 +14,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
   loadReportFromArchive: (props) => {
     api.getReportParts(props).then(items => {
+      pictureService.resetDraftUrl()
       dispatch(loadReportFromArchive(props, items))
     })
   },

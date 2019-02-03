@@ -12,9 +12,11 @@ import {
 } from '../../actions'
 import ReportForm from './ReportForm'
 import api from '../../services/ipc'
+import pictureService from '../../services/pictureService'
 
 const mapDispatchToProps = (dispatch) => ({
   clearReport: (props) => {
+    pictureService.resetDraftUrl()
     dispatch(clearReport(props))
   },
   removePart: (props) => {
@@ -24,7 +26,6 @@ const mapDispatchToProps = (dispatch) => ({
     api.checkReportName(props.name).then(result => {
       if (!result || allowRewrite) {
         api.saveReport(props).then(report => {
-          console.log()
           dispatch(addReportToArchive(report))
           dispatch(loadReportFromArchive(report, props.items))
           dispatch(allowRewriteDialog(false))
@@ -70,7 +71,8 @@ function mapStateToProps (state) {
     reportName: state.reportReducer.reportName,
     rewriteDialog: state.reportReducer.allowRewriteDialog,
     sum: state.reportReducer.sum,
-    reportPicture: state.reportReducer.picture
+    reportPicture: state.reportReducer.picture,
+    date_updated: state.reportReducer.date_updated
   }
 }
 

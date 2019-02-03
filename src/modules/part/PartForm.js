@@ -66,7 +66,7 @@ class PartForm extends React.Component {
       state.previewURL = URL.createObjectURL(e.target.files[0])
     }
     if (name === 'hour') {
-      value = Number.parseFloat(value)
+      value = Number.parseFloat(value.replace(',', '.'))
       value = !isNaN(value) ? value.toFixed(2) : null
     }
     state.part[name] = value
