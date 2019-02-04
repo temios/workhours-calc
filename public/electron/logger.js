@@ -1,7 +1,7 @@
 const log4js = require('log4js')
 const isDev = require('electron-is-dev')
 const path = require('path')
-const { dirPath } = require('./helper')
+const { dirPath } = require('./services/pathService')
 
 const fileName = 'application.log'
 const pathToFile = isDev ? fileName : path.join(dirPath, fileName)

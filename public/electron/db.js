@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const path = require('path')
 const isDev = require('electron-is-dev')
-const { dirPublicPath } = require('./helper')
+const { dirPublicPath } = require('./services/pathService')
 
 const fileName = 'work_hours.db'
 const pathToFile = path.join(

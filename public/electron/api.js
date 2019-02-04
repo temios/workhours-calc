@@ -1,106 +1,75 @@
-const { ipcMain, dialog } = require('electron')
-const { db } = require('./db')
-const randomstring = require('randomstring')
+const { ipcMain } = require('electron')
+const { dbService } = require('./services/dbService')
+const { pdfService } = require('./services/pdfService')
+const { dirPublicPath } = require('./services/pathService')
+const { stringHelper } = require('./helpers/stringHelper')
 const path = require('path')
 const fs = require('fs')
-const PdfPrinter = require('pdfmake')
 const { logger } = require('./logger')
 const moment = require('moment')
 const isDev = require('electron-is-dev')
-const { dirPublicPath } = require('./helper')
 
 ;(function startListen () {
   logger.info('start app')
   let picturePath = path.join(isDev ? 'public' : dirPublicPath, 'images')
-  let fontsPath = path.resolve(
-    isDev ? path.resolve(__dirname, '..') : dirPublicPath, 'fonts'
-  )
+
   ipcMain.on('get-categories', event => {
-    db.category
-      .findAll({ raw: true })
-      .then(categories => {
-        event.sender.send('categories-reply', categories)
-      })
-      .catch(err => {
-        event.sender.send(
-          'error',
-          'Произошла ошибка во время выборки категорий.'
-        )
-        logger.error(err.message)
-      })
+    dbService.getAllCategories().then(categories => {
+      event.sender.send('categories-reply', categories)
+    }).catch(err => {
+      event.sender.send(
+        'error',
+        'Произошла ошибка во время выборки категорий.'
+      )
+      logger.error(err.message)
+    })
   })
 
   ipcMain.on('get-parts', (event, categoryId) => {
-    db.part
-      .findAll({ where: { id_category: categoryId }, raw: true })
-      .then(parts => {
-        event.sender.send('get-parts-reply', parts)
-      })
-      .catch(err => {
-        event.sender.send(
-          'error',
-          'Произошла ошибка во время выборки сборок для категории.'
-        )
-        logger.error(err.message)
-      })
+    dbService.getCategoryParts(categoryId).then(parts => {
+      event.sender.send('get-parts-reply', parts)
+    }).catch(err => {
+      event.sender.send(
+        'error',
+        'Произошла ошибка во время выборки сборок для категории.'
+      )
+      logger.error(err.message)
+    })
   })
 
   ipcMain.on('get-reports', event => {
-    db.report
-      .findAll({ raw: true })
-      .then(reports => {
-        event.sender.send('get-reports-reply', reports)
-      })
-      .catch(err => {
-        event.sender.send('error', 'Произошла ошибка во время выборки отчётов.')
-        logger.error(err.message)
-      })
+    dbService.getAllReports().then(reports => {
+      event.sender.send('get-reports-reply', reports)
+    }).catch(err => {
+      event.sender.send('error', 'Произошла ошибка во время выборки отчётов.')
+      logger.error(err.message)
+    })
   })
 
-  ipcMain.on('get-report-parts', (event, report) => {
-    db.part
-      .findAll({
-        include: [{ model: db.reportPart, where: { id_report: report.id } }],
-        raw: true
-      })
-      .then(parts => {
-        let response = parts.map(part => {
-          let item = {}
-          item.count = part['report_parts.count']
-          item.part = {
-            hour: part.hour,
-            picture: part.picture,
-            name: part.name,
-            id_category: part.id_category,
-            id: part.id
-          }
-          return item
-        })
-        event.sender.send('get-report-parts-reply', response)
-      })
-      .catch(err => {
-        event.sender.send(
-          'error',
-          'Произошла ошибка во время выборки сборок для отчёта.'
-        )
-        logger.error(err.message)
-      })
+  ipcMain.on('get-report-parts', async (event, report) => {
+    try {
+      const response = await dbService.getReportParts(report.id)
+      event.sender.send('get-report-parts-reply', response)
+    } catch (err) {
+      event.sender.send(
+        'error',
+        'Произошла ошибка во время выборки сборок для отчёта.'
+      )
+      logger.error(err.message)
+    }
   })
 
   ipcMain.on('check-report-name', (event, name) => {
-    db.report
-      .findAll({ raw: true })
-      .then(reports => {
-        const report = findStr(name, reports, 'name')
-        event.sender.send('check-report-name-reply', !!report)
-      })
-      .catch(err => {
-        event.sender.send(
-          'error',
-          'Произошла ошибка во время проверки имени отчёта.'
-        )
-        logger.error(err.message)
-      })
+    dbService.getAllReports().then(reports => {
+      const report = stringHelper.findStringInArray(name, reports, 'name')
+      event.sender.send('check-report-name-reply', !!report)
+    }).catch(err => {
+      event.sender.send(
+        'error',
+        'Произошла ошибка во время проверки имени отчёта.'
+      )
+      logger.error(err.message)
+    })
   })
 
   ipcMain.on('save-part', (event, part) => {
@@ -108,85 +77,71 @@ const { dirPublicPath } = require('./helper')
       name: part.name,
       hour: part.hour
     }
-    db.part
-      .findAll({ raw: true })
-      .then(parts => {
-        return new Promise((resolve, reject) => {
-          const existPart = findStr(part.name, parts, 'name')
-          if (!existPart) {
-            return resolve()
-          }
-          reject(new Error('Сборка с таким именем уже существует.'))
-        })
+    dbService.getAllParts().then(parts => {
+      return new Promise((resolve, reject) => {
+        const existPart = stringHelper.findStringInArray(part.name, parts,
+          'name')
+        if (!existPart) {
+          return resolve()
+        }
+        reject(new Error('Сборка с таким именем уже существует.'))
       })
-      .then(() => {
-        return db.category.findAll({ raw: true })
-      }).then((categories) => {
-        return findStr(part.category, categories, 'name')
+    }).then(() => {
+      return dbService.getAllCategories()
+    }).then((categories) => {
+      return stringHelper.findStringInArray(part.category, categories, 'name')
+    }).then(category => {
+      return new Promise(resolve => {
+        if (!category) {
+          dbService.createCategory(part.category).then(data => {
+            let category = data.get({ plain: true })
+            event.sender.send('add-category-reply', category)
+            resolve(data)
+          })
+        } else {
+          resolve(category)
+        }
       })
-      .then(category => {
-        return new Promise(resolve => {
-          if (!category) {
-            db.category.create({ name: part.category }).then(data => {
-              let category = data.get({ plain: true })
-              event.sender.send('add-category-reply', category)
-              resolve(data)
-            })
-          } else {
-            resolve(category)
-          }
-        })
+    }).then(category => {
+      let pictureName = stringHelper.generatePictureName(part.picture)
+      let src = path.join(picturePath, pictureName)
+      fs.copyFile(part.picture, src, err => {
+        if (err) throw err
       })
-      .then(category => {
-        let pictureName =
-          randomstring.generate(32) + '.' + part.picture.split('.').pop()
-        let src = path.join(picturePath, pictureName)
-        fs.copyFile(part.picture, src, err => {
-          if (err) throw err
-        })
-        dbPart.id_category = category.id
-        dbPart.picture = pictureName
-        return db.part.create(dbPart)
-      })
-      .then(newPart => {
-        event.sender.send('save-part-reply', newPart.get({ plain: true }))
-      })
-      .catch(err => {
-        event.sender.send('error', err.message)
-        logger.error(err.message)
-      })
+      dbPart.id_category = category.id
+      dbPart.picture = pictureName
+      return dbService.createPart(dbPart)
+    }).then(newPart => {
+      event.sender.send('save-part-reply', newPart.get({ plain: true }))
+    }).catch(err => {
+      event.sender.send('error', err.message)
+      logger.error(err.message)
+    })
   })
 
   ipcMain.on('edit-part', async (event, part) => {
     try {
-      const dbPart = await db.part.findOne({
-        where: { id: part.id },
-        raw: true
-      })
-      const parts = await db.part.findAll({
-        where: { id: { [db.Op.ne]: dbPart.id } },
-        raw: true
-      })
-      const existPart = findStr(part.name, parts, 'name')
+      const dbPart = await dbService.getPartById(part.id)
+      const parts = await dbService.getPartsNotEqualId(dbPart.id)
+      const existPart = stringHelper.findStringInArray(part.name, parts, 'name')
       if (existPart) {
         return event.sender.send(
           'error',
           'Cуществует другая сборка с таким именем'
         )
       }
-      const categories = await db.category.findAll({ raw: true })
-      let dbCategory = findStr(part.category, categories, 'name')
+      const categories = await dbService.getAllCategories()
+      let dbCategory = stringHelper.findStringInArray(part.category, categories,
+        'name')
       if (!dbCategory) {
-        dbCategory = await db.category
-          .create({ name: part.category })
-          .then(category => {
+        dbCategory = await dbService.createCategory(part.category)
+        .then(category => {
             return Promise.resolve(category.get({ plain: true }))
           })
         event.sender.send('add-category-reply', dbCategory)
       }
       if (part.picture !== dbPart.picture) {
-        let pictureName =
-          randomstring.generate(32) + '.' + part.picture.split('.').pop()
+        let pictureName = stringHelper.generatePictureName(part.picture)
         let src = path.join(picturePath, pictureName)
         fs.copyFile(part.picture, src, err => {
           if (err) throw err
@@ -196,7 +151,7 @@ const { dirPublicPath } = require('./helper')
       dbPart.hour = part.hour
       dbPart.id_category = dbCategory.id
       dbPart.name = part.name
-      const updated = await db.part.update(dbPart, { where: { id: dbPart.id } })
+      const updated = await dbService.updatePart(part)
       if (updated) {
         return event.sender.send('edit-part-reply', dbPart)
       }
@@ -214,12 +169,11 @@ const { dirPublicPath } = require('./helper')
     let dbReport = {}
     let savedPicture = ''
     const date = moment().format('DD.MM.YYYY HH:mm:ss')
-    db.report.findAll().then(reports => {
-      return findStr(report.name, reports, 'name')
+    dbService.getAllReports().then(reports => {
+      return stringHelper.findStringInArray(report.name, reports, 'name')
     }).then(newReport => {
       if (!newReport || newReport.picture !== report.picture) { // TODO: Remove duplicate
-        let pictureName =
-          randomstring.generate(32) + '.' + report.picture.split('.').pop()
+        let pictureName = stringHelper.generatePictureName(report.picture)
         let src = path.join(picturePath, pictureName)
         fs.copyFile(report.picture, src, err => {
           if (err) throw err
@@ -230,11 +184,7 @@ const { dirPublicPath } = require('./helper')
     }).then(newReport => {
       if (!newReport) {
         dbReport.date_created = date
-        return db.report.create({
-          name: report.name,
-          date_updated: date,
-          picture: savedPicture
-        })
+        return dbService.createReport(report.name, date, savedPicture)
       } else {
         newReport.date_updated = date
         newReport.name = report.name
@@ -244,16 +194,9 @@ const { dirPublicPath } = require('./helper')
       }
     }).then(newReport => {
       let currentReport = newReport.get({ plain: true })
-      db.reportPart.destroy(
-        { where: { id_report: currentReport.id } }
-      ).then(() => {
+      dbService.unlinkPartsFromReport(currentReport.id).then(() => {
         report.items.forEach(item => {
-          let dbReportPart = {
-            id_report: currentReport.id,
-            id_part: item.part.id,
-            count: item.count
-          }
-          db.reportPart.create(dbReportPart)
+          dbService.createReportPart(currentReport.id, item.part.id, item.count)
         })
       })
       return currentReport
@@ -270,101 +213,12 @@ const { dirPublicPath } = require('./helper')
 
   ipcMain.on('generate-pdf', (event, report) => {
     try {
-      dialog.showSaveDialog(
-        null,
-        {
-          filters: [
-            {
-              name: 'Adobe PDF',
-              extensions: ['pdf']
-            }
-          ],
-          defaultPath: report.name
-        },
-        savePath => {
-          if (savePath) {
-            let content = [
-              {
-                text: 'Наименование изделия: ' + report.name,
-                bold: true,
-                fontSize: 15,
-                margin: [0, 10]
-              },
-              {
-                text: 'Количество сборок: ' + report.items.length,
-                bold: true,
-                fontSize: 15,
-                margin: [0, 10]
-              },
-              {
-                text: 'Дата: ' + 
-                  moment(report.date_updated, 'DD.MM.YYYY HH:mm:ss')
-                  .format('DD.MM.YYYY'),
-                bold: true,
-                fontSize: 15,
-                margin: [0, 10]
-              }
-            ]
-            let body = [
-              [
-                { text: '#' },
-                { text: 'Трудоемкость' },
-                { text: 'Нaименование сборки' },
-                { text: 'Кол-во' },
-                { text: 'Сумма часов' }
-              ]
-            ]
-            report.items.forEach((item, i) => {
-              let row = [
-                ++i,
-                item.part.hour + ' ч/ч',
-                item.part.name,
-                item.count + ' шт.',
-                Number.parseFloat((item.count * item.part.hour).toFixed(2)) +
-                  ' ч/ч'
-              ]
-              body.push(row)
-            })
-            let table = {
-              table: {
-                headerRows: 1,
-                widths: ['auto', 'auto', '*', 'auto', 'auto'],
-                body: body
-              }
-            }
-            content.push(table)
-            content.push({
-              text: 'Итого: ' + report.sum + ' ч/ч',
-              bold: true,
-              fontSize: 15,
-              margin: [0, 10]
-            })
-            let fonts = {
-              Roboto: {
-                normal: path.resolve(fontsPath, 'Roboto-Regular.ttf'),
-                bold: path.resolve(fontsPath, 'Roboto-Medium.ttf'),
-                italics: path.resolve(fontsPath, 'Roboto-Italic.ttf'),
-                bolditalics: path.resolve(fontsPath, 'Roboto-MediumItalic.ttf')
-              }
-            }
-            let printer = new PdfPrinter(fonts)
-            let pdf = printer.createPdfKitDocument({ content: content })
-            pdf.pipe(fs.createWriteStream(savePath))
-            pdf.end()
-            event.sender.send('generate-pdf-reply', true)
-          }
-        }
-      )
+      if (pdfService.savePdf(report)) {
+        event.sender.send('generate-pdf-reply', true)
+      }
     } catch (err) {
       event.sender.send('error', 'Произошла ошибка во время создания pdf.')
       logger.error(err.message)
     }
   })
-
-  function findStr (needle, arr, field) {
-    const modifyNeedle = needle.toLowerCase().trim()
-    return arr.find(item => {
-      return item[field].toLowerCase().trim() === modifyNeedle
-    })
-  }
 })()
